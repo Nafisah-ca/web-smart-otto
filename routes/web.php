@@ -120,9 +120,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/tariffs/{tariff}/toggle', [TariffController::class, 'toggle'])->name('tariffs.toggle');
 
     // CMS Contents
-    Route::get('/cms',            [CmsController::class, 'index'])->name('cms.index');
-    Route::get('/cms/{group}',    [CmsController::class, 'group'])->name('cms.group');
-    Route::put('/cms/{content}',  [CmsController::class, 'update'])->name('cms.update');
+    Route::get('/cms',                      [CmsController::class, 'index'])->name('cms.index');
+    Route::post('/cms/general/faq',         [CmsController::class, 'saveFaq'])->name('cms.faq.save');
+    Route::get('/cms/{section}/edit',       [CmsController::class, 'edit'])->name('cms.edit');
+    Route::post('/cms/{section}/save',      [CmsController::class, 'save'])->name('cms.save');
 
     // Reports
     Route::get('/reports',        [ReportController::class, 'index'])->name('reports.index');

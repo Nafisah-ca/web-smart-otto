@@ -20,11 +20,11 @@ class CmsContent extends Model
 
     public static function get(string $key, string $default = ''): string
     {
-        $content = Cache::remember("cms_{$key}", 3600, function () use ($key) {
-            return self::where('key', $key)->where('is_active', true)->first();
+        // Cache hanya string value, bukan object — agar forget() benar-benar efektif
+        return Cache::remember("cms_{$key}", 3600, function () use ($key, $default) {
+            $row = self::where('key', $key)->where('is_active', true)->first();
+            return $row?->value ?? $default;
         });
-
-        return $content?->value ?? $default;
     }
 
     public static function clearCache(string $key): void

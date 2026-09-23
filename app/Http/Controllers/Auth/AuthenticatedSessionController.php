@@ -33,24 +33,32 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return $this->redirectByRole(Auth::user()->role);
+        return match (Auth::user()->role) {
+            'admin'     => redirect()->route('admin.cms.index'),
+            'inspector' => redirect()->route('inspector.dashboard'),
+            default     => redirect()->intended(route('customer.dashboard')),
+        };
     }
 
     // ── Logout (shared) ──────────────────────────────────────────────
     public function destroy(Request $request)
     {
+        $role = Auth::user()?->role;
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return match ($role) {
+            'admin' => redirect()->route('login'),
+            default => redirect()->route('home'),
+        };
     }
 
     // ── Helper ──────────────────────────────────────────────────────
     private function redirectByRole(string $role)
     {
         return match ($role) {
-            'admin'     => redirect()->route('admin.dashboard'),
+            'admin'     => redirect()->route('admin.cms.index'),
             'inspector' => redirect()->route('inspector.dashboard'),
             default     => redirect()->route('customer.dashboard'),
         };

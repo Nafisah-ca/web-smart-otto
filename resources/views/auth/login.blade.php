@@ -8,7 +8,7 @@
                 <span class="text-white font-bold text-lg">SO</span>
             </div>
             <h1 class="text-2xl font-bold text-gray-900">Masuk ke Smart Otto</h1>
-            <p class="text-gray-500 mt-1 text-sm">Halaman login untuk Customer & Inspektor</p>
+            <p class="text-gray-500 mt-1 text-sm">Masuk dengan akun Anda</p>
         </div>
 
         <div class="card p-8">
