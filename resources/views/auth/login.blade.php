@@ -42,17 +42,6 @@
                 <a href="{{ route('register') }}" class="text-primary-600 font-medium hover:underline">Daftar sekarang</a>
             </p>
         </div>
-
-        {{-- Admin login box — lebih jelas --}}
-        <div class="mt-4 border border-gray-200 rounded-xl p-4 bg-gray-50 text-center">
-            <p class="text-sm text-gray-600 mb-2">
-                🔐 <strong>Admin / CS?</strong> Gunakan halaman login khusus admin.
-            </p>
-            <a href="{{ route('admin.login') }}"
-               class="inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 hover:underline">
-                Masuk sebagai Admin →
-            </a>
-        </div>
     </div>
 </div>
 @endsection

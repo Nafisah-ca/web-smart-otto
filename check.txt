@@ -1,1 +1,0 @@
-{"users":[{"role":"admin","total":1}],"vehicles":0,"bookings":0}

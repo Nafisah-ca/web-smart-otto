@@ -85,12 +85,6 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer
 | ADMIN ROUTES
 |----------------------------------------------------------------------
 */
-// Admin login — tanpa middleware guest agar selalu bisa diakses
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/login',  [AuthenticatedSessionController::class, 'adminCreate'])->name('login');
-    Route::post('/login', [AuthenticatedSessionController::class, 'adminStore'])->name('login.store');
-});
-
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
@@ -119,7 +113,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/packages/{package}/toggle', [PackageController::class, 'toggle'])->name('packages.toggle');
 
     // Checklist Items (CMS)
-    Route::resource('/checklist-items', ChecklistItemController::class);
+    Route::resource('/checklist-items', ChecklistItemController::class)->except('show');
 
     // Tariffs (CMS)
     Route::resource('/tariffs', TariffController::class);
