@@ -49,6 +49,13 @@
                 </div>
 
                 <div class="px-5 py-4 space-y-1">
+                    <label class="block text-sm font-medium text-gray-700">Teks Sambutan</label>
+                    <textarea name="about_welcome" rows="3"
+                              class="form-input w-full" placeholder="Selamat datang di Smart Otto!...">{{ old('about_welcome', $data['about_welcome'] ?? '') }}</textarea>
+                    <p class="text-xs text-gray-400">Teks pembuka yang muncul di bawah logo halaman Tentang Kami.</p>
+                </div>
+
+                <div class="px-5 py-4 space-y-1">
                     <label class="block text-sm font-medium text-gray-700">Deskripsi Perusahaan</label>
                     <textarea name="about_content" rows="4"
                               class="form-input w-full">{{ old('about_content', $data['about_content']) }}</textarea>
@@ -62,8 +69,9 @@
 
                 <div class="px-5 py-4 space-y-1">
                     <label class="block text-sm font-medium text-gray-700">Misi</label>
-                    <textarea name="about_mission" rows="3"
-                              class="form-input w-full" placeholder="Misi perusahaan...">{{ old('about_mission', $data['about_mission']) }}</textarea>
+                    <textarea name="about_mission" rows="4"
+                              class="form-input w-full" placeholder="Tulis tiap misi di baris baru...">{{ old('about_mission', $data['about_mission']) }}</textarea>
+                    <p class="text-xs text-gray-400">Tulis setiap poin misi di baris baru. Akan ditampilkan sebagai daftar poin.</p>
                 </div>
 
             </div>
@@ -74,6 +82,42 @@
         </div>
 
     </form>
+
+    {{-- Logo Upload — form terpisah karena butuh enctype --}}
+    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div class="px-5 py-4 border-b border-gray-100 bg-gray-50">
+            <h2 class="font-semibold text-gray-800">Logo Perusahaan</h2>
+            <p class="text-xs text-gray-500 mt-0.5">Tampil di halaman Tentang Kami. PNG/WebP transparan disarankan.</p>
+        </div>
+        <form method="POST" action="{{ route('admin.cms.save', $section) }}" enctype="multipart/form-data">
+            @csrf
+            <div class="px-5 py-4 space-y-3">
+                @php $logoPath = $data['about_logo'] ?? ''; @endphp
+                @if($logoPath)
+                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <img src="{{ asset($logoPath) }}" alt="Logo" class="h-16 object-contain">
+                    <p class="text-xs text-gray-500 break-all">{{ $logoPath }}</p>
+                </div>
+                <label class="flex items-center gap-2 text-xs text-red-500 cursor-pointer">
+                    <input type="checkbox" name="about_logo_remove" value="1" class="rounded">
+                    Hapus logo
+                </label>
+                @else
+                <div class="h-16 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex items-center justify-center">
+                    <span class="text-xs text-gray-400">Belum ada logo</span>
+                </div>
+                @endif
+                <input type="file" name="about_logo" accept="image/png,image/webp,image/jpeg,image/svg+xml"
+                       class="block w-full text-sm text-gray-500
+                              file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0
+                              file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700
+                              hover:file:bg-blue-100 cursor-pointer">
+            </div>
+            <div class="px-5 py-3 border-t border-gray-100 bg-gray-50 flex justify-end">
+                <button type="submit" class="btn-primary btn-sm">Simpan Logo</button>
+            </div>
+        </form>
+    </div>
 
     {{-- FAQ — form terpisah --}}
     @php

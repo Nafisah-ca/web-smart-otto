@@ -47,6 +47,10 @@ class HomeController extends Controller
 
             // FAQ
             'faq_items' => json_decode(CmsContent::get('faq_items', '[]'), true) ?? [],
+
+            // Kategori
+            'kategori_title' => CmsContent::get('kategori_title', 'Pilih Kategori'),
+            'kategori_items' => json_decode(CmsContent::get('kategori_items', '[]'), true) ?? [],
         ];
 
         return view('home', compact('packages', 'cms'));
@@ -61,10 +65,17 @@ class HomeController extends Controller
     public function tentang()
     {
         $cms = [
-            'about_title'      => CmsContent::get('about_title'),
-            'about_content'    => CmsContent::get('about_content'),
-            'about_vision'     => CmsContent::get('about_vision'),
-            'about_mission'    => CmsContent::get('about_mission'),
+            'about_title'    => CmsContent::get('about_title',   'Tentang Smart Otto'),
+            'about_welcome'  => CmsContent::get('about_welcome', ''),
+            'about_content'  => CmsContent::get('about_content', ''),
+            'about_vision'   => CmsContent::get('about_vision',  ''),
+            'about_mission'  => CmsContent::get('about_mission', ''),
+            'about_logo'     => CmsContent::get('about_logo',    ''),
+            'site_name'      => CmsContent::get('site_name',     'Smart Otto'),
+            'site_phone'     => CmsContent::get('site_phone',    ''),
+            'site_email'     => CmsContent::get('site_email',    ''),
+            'keunggulan_title'    => CmsContent::get('keunggulan_title', 'Mengapa Memilih Smart Otto?'),
+            'keunggulan_items'    => json_decode(CmsContent::get('keunggulan_items', '[]'), true) ?? [],
             'stat_customers'   => CmsContent::get('stat_customers',   '500+'),
             'stat_inspections' => CmsContent::get('stat_inspections', '1.200+'),
             'stat_inspectors'  => CmsContent::get('stat_inspectors',  '15+'),

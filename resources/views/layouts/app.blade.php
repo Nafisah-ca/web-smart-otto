@@ -27,6 +27,7 @@
             <div class="hidden md:flex items-center gap-6">
                 <a href="{{ route('home') }}" class="text-sm font-medium {{ request()->routeIs('home') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Beranda</a>
                 <a href="{{ route('layanan') }}" class="text-sm font-medium {{ request()->routeIs('layanan') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Layanan</a>
+                <a href="{{ route('booking.create') }}" class="text-sm font-medium {{ request()->routeIs('booking*') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Booking</a>
                 <a href="{{ route('tentang') }}" class="text-sm font-medium {{ request()->routeIs('tentang') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Tentang</a>
                 <a href="{{ route('kontak') }}" class="text-sm font-medium {{ request()->routeIs('kontak') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Kontak</a>
             </div>
@@ -59,6 +60,7 @@
     <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 bg-white px-4 py-3 space-y-1">
         <a href="{{ route('home') }}" class="block py-2 text-sm text-gray-700">Beranda</a>
         <a href="{{ route('layanan') }}" class="block py-2 text-sm text-gray-700">Layanan</a>
+        <a href="{{ route('booking.create') }}" class="block py-2 text-sm text-gray-700">Booking</a>
         <a href="{{ route('tentang') }}" class="block py-2 text-sm text-gray-700">Tentang</a>
         <a href="{{ route('kontak') }}" class="block py-2 text-sm text-gray-700">Kontak</a>
         <div class="pt-2 border-t border-gray-100 flex gap-2">

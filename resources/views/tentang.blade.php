@@ -1,59 +1,151 @@
 @extends('layouts.app')
-@section('title', 'Tentang Kami')
+@section('title', $cms['about_title'] ?: 'Tentang Kami')
 @section('content')
-<div class="max-w-4xl mx-auto px-4 py-12">
 
-    <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ $cms['about_title'] }}</h1>
-    <p class="text-gray-600 leading-relaxed mb-8">{{ $cms['about_content'] }}</p>
-
-    {{-- Statistik --}}
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-        @foreach([
-            ['value' => $cms['stat_customers'],   'label' => 'Customer Puas'],
-            ['value' => $cms['stat_inspections'],  'label' => 'Inspeksi'],
-            ['value' => $cms['stat_inspectors'],   'label' => 'Teknisi'],
-            ['value' => $cms['stat_years'],        'label' => 'Tahun'],
-        ] as $s)
-        <div class="card p-5 text-center">
-            <p class="text-3xl font-extrabold text-primary-600">{{ $s['value'] }}</p>
-            <p class="text-sm text-gray-500 mt-1">{{ $s['label'] }}</p>
-        </div>
-        @endforeach
+{{-- HERO BANNER --}}
+<div class="bg-primary-600 py-12">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
+            {{ $cms['about_title'] ?: 'Tentang Kami' }}
+        </h1>
+        <p class="text-primary-200 text-sm mt-3">
+            <a href="{{ route('home') }}" class="hover:text-white transition-colors">Beranda</a>
+            <span class="mx-2 opacity-40">/</span>
+            <span>Tentang Kami</span>
+        </p>
     </div>
-
-    {{-- Visi --}}
-    @if($cms['about_vision'])
-    <div class="card p-6 mb-4">
-        <div class="flex items-center gap-3 mb-3">
-            <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-            </div>
-            <h2 class="text-xl font-bold text-gray-900">Visi</h2>
-        </div>
-        <p class="text-gray-600">{{ $cms['about_vision'] }}</p>
-    </div>
-    @endif
-
-    {{-- Misi --}}
-    @if($cms['about_mission'])
-    <div class="card p-6">
-        <div class="flex items-center gap-3 mb-3">
-            <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-            </div>
-            <h2 class="text-xl font-bold text-gray-900">Misi</h2>
-        </div>
-        <div class="text-gray-600 whitespace-pre-line">{{ $cms['about_mission'] }}</div>
-    </div>
-    @endif
-
 </div>
+
+<div class="max-w-3xl mx-auto px-6 py-12">
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+
+        {{-- LOGO --}}
+        <div class="flex flex-col items-center pt-10 pb-7 border-b border-gray-100">
+            @if($cms['about_logo'])
+                <img src="{{ asset($cms['about_logo']) }}" alt="{{ $cms['site_name'] }}"
+                     class="h-16 object-contain mb-5">
+            @else
+                <div class="w-16 h-16 bg-primary-600 rounded-xl flex items-center justify-center mb-5 shadow-sm">
+                    <span class="text-white font-bold text-xl">SO</span>
+                </div>
+            @endif
+            <h2 class="text-base font-semibold text-gray-700 tracking-wide">{{ $cms['site_name'] ?? 'Smart Otto' }}</h2>
+        </div>
+
+        <div class="divide-y divide-gray-100">
+
+            {{-- SAMBUTAN / DESKRIPSI --}}
+            @if($cms['about_welcome'] || $cms['about_content'])
+            <div class="px-8 py-8">
+                @if($cms['about_welcome'])
+                <p class="text-lg font-semibold text-gray-900 leading-snug mb-4">
+                    {{ $cms['about_welcome'] }}
+                </p>
+                @endif
+                @if($cms['about_content'])
+                <div class="text-gray-500 text-sm leading-relaxed space-y-3">
+                    @foreach(array_filter(array_map('trim', explode("\n", $cms['about_content']))) as $para)
+                    <p>{{ $para }}</p>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+            @endif
+
+            {{-- VISI --}}
+            @if($cms['about_vision'])
+            <div class="px-8 py-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-6 bg-primary-500 rounded-full flex-shrink-0"></div>
+                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">Visi Kami</h3>
+                </div>
+                <p class="text-gray-500 text-sm leading-relaxed">{{ $cms['about_vision'] }}</p>
+            </div>
+            @endif
+
+            {{-- MISI --}}
+            @if($cms['about_mission'])
+            @php $misiLines = array_filter(array_map('trim', explode("\n", $cms['about_mission']))); @endphp
+            <div class="px-8 py-8">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-1 h-6 bg-primary-500 rounded-full flex-shrink-0"></div>
+                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">Misi Kami</h3>
+                </div>
+                <ul class="space-y-4">
+                    @foreach($misiLines as $line)
+                    @php
+                        $parts   = explode(':', $line, 2);
+                        $hasHead = count($parts) === 2 && strlen(trim($parts[0])) < 60;
+                    @endphp
+                    <li class="flex gap-3 text-sm text-gray-500 leading-relaxed">
+                        <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-400 flex-shrink-0"></span>
+                        <span>
+                            @if($hasHead)
+                                <span class="font-semibold text-gray-800">{{ trim($parts[0]) }}:</span>{{ $parts[1] }}
+                            @else
+                                {{ $line }}
+                            @endif
+                        </span>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+            {{-- MENGAPA MEMILIH KAMI --}}
+            @if(!empty($cms['keunggulan_items']))
+            <div class="px-8 py-8">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-1 h-6 bg-primary-500 rounded-full flex-shrink-0"></div>
+                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">
+                        {{ $cms['keunggulan_title'] ?: 'Mengapa Memilih Kami?' }}
+                    </h3>
+                </div>
+                <ul class="space-y-4">
+                    @foreach($cms['keunggulan_items'] as $item)
+                    <li class="flex gap-3 text-sm text-gray-500 leading-relaxed">
+                        <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-400 flex-shrink-0"></span>
+                        <span>
+                            <span class="font-semibold text-gray-800">{{ $item['title'] }}</span>
+                            @if(!empty($item['desc'])): {{ $item['desc'] }}@endif
+                        </span>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+            {{-- HUBUNGI KAMI --}}
+            <div class="px-8 py-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-6 bg-primary-500 rounded-full flex-shrink-0"></div>
+                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">Hubungi Kami</h3>
+                </div>
+                <p class="text-sm text-gray-500 leading-relaxed mb-4">
+                    Kami siap membantu Anda memastikan kendaraan dalam kondisi prima.
+                    @if($cms['site_phone'])
+                        Hubungi kami di <span class="font-medium text-gray-700">{{ $cms['site_phone'] }}</span>
+                    @endif
+                    @if($cms['site_phone'] && $cms['site_email'])
+                        atau
+                    @endif
+                    @if($cms['site_email'])
+                        email ke <span class="font-medium text-gray-700">{{ $cms['site_email'] }}</span>
+                    @endif.
+                    Untuk informasi lebih lanjut, kunjungi
+                    <a href="{{ route('kontak') }}" class="text-primary-600 hover:underline">halaman kontak kami</a>.
+                </p>
+                <p class="text-sm font-semibold text-gray-800">
+                    {{ $cms['site_name'] ?? 'Smart Otto' }} — {{ $cms['site_tagline'] ?? 'Inspeksi Kendaraan Profesional & Terpercaya' }}
+                </p>
+                <p class="text-sm text-gray-400 mt-2 leading-relaxed">
+                    Dengan {{ $cms['site_name'] ?? 'Smart Otto' }}, Anda dapat memastikan kendaraan dalam kondisi prima
+                    dengan tenang dan percaya diri. Terima kasih telah mempercayakan inspeksi kendaraan Anda kepada kami.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @endsection

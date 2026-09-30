@@ -70,36 +70,90 @@
     </div>
 </section>
 
-{{-- PACKAGES --}}
+{{-- KATEGORI KENDARAAN --}}
+@if(!empty($cms['kategori_items']))
 <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-10">
-        <h2 class="text-3xl font-bold text-gray-900">Paket Inspeksi</h2>
-        <p class="text-gray-500 mt-2">Pilih paket yang sesuai kebutuhan kendaraan Anda</p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @foreach($packages as $index => $pkg)
-        <div class="card p-6 flex flex-col {{ $index === 1 ? 'border-primary-400 ring-2 ring-primary-500 relative' : '' }}">
-            @if($index === 1)
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span class="bg-primary-600 text-white text-xs font-bold px-3 py-1 rounded-full">POPULER</span>
-            </div>
-            @endif
-            <div class="text-4xl mb-3">{{ $pkg->icon ?? '🔧' }}</div>
-            <h3 class="text-xl font-bold text-gray-900">{{ $pkg->name }}</h3>
-            <p class="text-gray-500 text-sm mt-2 flex-1">{{ $pkg->description }}</p>
-            <div class="mt-4 pt-4 border-t border-gray-100">
-                <div class="flex items-end justify-between">
-                    <div>
-                        <p class="text-2xl font-bold text-primary-600">{{ $pkg->formatted_price }}</p>
-                        <p class="text-xs text-gray-400">Estimasi {{ $pkg->duration_estimate }} menit</p>
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">{{ $cms['kategori_title'] ?? 'Pilih Kategori' }}</h2>
+
+    <div class="flex gap-6">
+        {{-- KIRI: Tab kategori --}}
+        <div class="flex flex-col gap-2 w-36 flex-shrink-0">
+            @foreach($cms['kategori_items'] as $i => $kat)
+            <button onclick="switchKat({{ $i }})"
+                    id="tab-{{ $i }}"
+                    class="kat-tab flex items-center justify-between px-4 py-2.5 rounded-lg border text-sm font-medium transition-all text-left
+                           {{ $i === 0 ? 'bg-primary-600 text-white border-primary-600' : 'bg-white text-gray-700 border-gray-200 hover:border-primary-400' }}">
+                <span>{{ $kat['name'] }}</span>
+                <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+            @endforeach
+        </div>
+
+        {{-- TENGAH + KANAN: Konten per kategori --}}
+        <div class="flex-1 bg-white border border-gray-200 rounded-xl overflow-hidden">
+            @foreach($cms['kategori_items'] as $i => $kat)
+            <div id="panel-{{ $i }}" class="kat-panel {{ $i !== 0 ? 'hidden' : '' }}">
+                <div class="flex flex-col md:flex-row">
+                    {{-- Gambar --}}
+                    <div class="md:w-1/2 flex items-center justify-center p-8 bg-gray-50" style="min-height:260px;max-height:320px;overflow:hidden;">
+                        @if(!empty($kat['img']))
+                        <img src="{{ asset($kat['img']) }}" alt="{{ $kat['name'] }}"
+                             class="w-full h-full object-contain" style="max-height:260px;">
+                        @else
+                        <div class="flex items-center justify-center w-full" style="height:200px;">
+                            <svg class="w-24 h-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                      d="M8 17a2 2 0 100-4 2 2 0 000 4zm8 0a2 2 0 100-4 2 2 0 000 4zM3 11l1.5-4.5A2 2 0 016.4 5h11.2a2 2 0 011.9 1.5L21 11v4a1 1 0 01-1 1h-1M3 11v4a1 1 0 001 1h1m-2-5h18"/>
+                            </svg>
+                        </div>
+                        @endif
                     </div>
-                    <a href="{{ route('booking.create', ['package' => $pkg->id]) }}" class="btn-primary btn-sm">Pilih</a>
+
+                    {{-- Daftar model --}}
+                    <div class="md:w-1/2 border-l border-gray-100">
+                        @if($kat['harga'])
+                        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                            <p class="text-sm font-semibold text-gray-800">{{ $kat['harga'] }}</p>
+                        </div>
+                        @endif
+                        @if(!empty($kat['models']))
+                        @php
+                            $models = $kat['models'];
+                            $half   = (int) ceil(count($models) / 2);
+                            $col1   = array_slice($models, 0, $half);
+                            $col2   = array_slice($models, $half);
+                        @endphp
+                        <div class="grid grid-cols-2 divide-x divide-gray-100">
+                            <ul>
+                                @foreach($col1 as $model)
+                                <li class="px-5 py-2.5 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors">{{ $model }}</li>
+                                @endforeach
+                            </ul>
+                            <ul>
+                                @foreach($col2 as $model)
+                                <li class="px-5 py-2.5 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors">{{ $model }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @else
+                        <div class="p-6 text-center text-sm text-gray-400">Belum ada model tersedia.</div>
+                        @endif
+
+                        <div class="px-6 py-4 border-t border-gray-100">
+                            <a href="{{ route('booking.create') }}" class="btn-primary btn-sm w-full justify-center">
+                                Booking Sekarang
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
+            @endforeach
         </div>
-        @endforeach
     </div>
 </section>
+@endif
 
 {{-- HOW IT WORKS --}}
 <section class="bg-gray-50 py-16">
@@ -196,5 +250,27 @@
         </a>
     </div>
 </section>
+
+@push('scripts')
+<script>
+function switchKat(idx) {
+    // Sembunyikan semua panel
+    document.querySelectorAll('.kat-panel').forEach(p => p.classList.add('hidden'));
+    // Reset semua tab
+    document.querySelectorAll('.kat-tab').forEach(t => {
+        t.classList.remove('bg-primary-600','text-white','border-primary-600');
+        t.classList.add('bg-white','text-gray-700','border-gray-200');
+    });
+    // Tampilkan panel yang dipilih
+    document.getElementById('panel-' + idx)?.classList.remove('hidden');
+    // Aktifkan tab yang dipilih
+    const tab = document.getElementById('tab-' + idx);
+    if (tab) {
+        tab.classList.remove('bg-white','text-gray-700','border-gray-200');
+        tab.classList.add('bg-primary-600','text-white','border-primary-600');
+    }
+}
+</script>
+@endpush
 
 @endsection
