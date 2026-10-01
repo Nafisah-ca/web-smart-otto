@@ -27,6 +27,16 @@
                     </td>
                     <td class="px-5 py-4 text-gray-500 hidden md:table-cell">{{ $meta['desc'] }}</td>
                     <td class="px-5 py-4 text-right">
+                        @if(isset($meta['external_url']))
+                        <a href="{{ route($meta['external_url']) }}"
+                           class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-800 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v8a2 2 0 01-2 2z"/>
+                            </svg>
+                            Kelola
+                        </a>
+                        @else
                         <a href="{{ route('admin.cms.edit', $key) }}"
                            class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,6 +45,7 @@
                             </svg>
                             Edit
                         </a>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

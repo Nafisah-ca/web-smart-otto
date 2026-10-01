@@ -8,6 +8,7 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+    @stack('styles')
 </head>
 <body class="bg-gray-50">
 
@@ -27,6 +28,7 @@
             <div class="hidden md:flex items-center gap-6">
                 <a href="{{ route('home') }}" class="text-sm font-medium {{ request()->routeIs('home') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Beranda</a>
                 <a href="{{ route('layanan') }}" class="text-sm font-medium {{ request()->routeIs('layanan') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Layanan</a>
+                <a href="{{ route('blog.index') }}" class="text-sm font-medium {{ request()->routeIs('blog*') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Blog</a>
                 <a href="{{ route('booking.create') }}" class="text-sm font-medium {{ request()->routeIs('booking*') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Booking</a>
                 <a href="{{ route('tentang') }}" class="text-sm font-medium {{ request()->routeIs('tentang') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Tentang</a>
                 <a href="{{ route('kontak') }}" class="text-sm font-medium {{ request()->routeIs('kontak') ? 'text-primary-600' : 'text-gray-600 hover:text-gray-900' }}">Kontak</a>
@@ -60,6 +62,7 @@
     <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 bg-white px-4 py-3 space-y-1">
         <a href="{{ route('home') }}" class="block py-2 text-sm text-gray-700">Beranda</a>
         <a href="{{ route('layanan') }}" class="block py-2 text-sm text-gray-700">Layanan</a>
+        <a href="{{ route('blog.index') }}" class="block py-2 text-sm text-gray-700">Blog</a>
         <a href="{{ route('booking.create') }}" class="block py-2 text-sm text-gray-700">Booking</a>
         <a href="{{ route('tentang') }}" class="block py-2 text-sm text-gray-700">Tentang</a>
         <a href="{{ route('kontak') }}" class="block py-2 text-sm text-gray-700">Kontak</a>
@@ -178,6 +181,7 @@
                 <ul class="space-y-2 text-sm">
                     <li><a href="{{ route('layanan') }}" class="hover:text-white transition-colors">Paket Inspeksi</a></li>
                     <li><a href="{{ route('booking.create') }}" class="hover:text-white transition-colors">Booking Inspeksi</a></li>
+                    <li><a href="{{ route('blog.index') }}" class="hover:text-white transition-colors">Blog</a></li>
                     <li><a href="{{ route('tentang') }}" class="hover:text-white transition-colors">Tentang Kami</a></li>
                     <li><a href="{{ route('kontak') }}" class="hover:text-white transition-colors">Kontak</a></li>
                 </ul>
@@ -202,6 +206,7 @@
     </div>
 </footer>
 
+@stack('scripts')
 @stack('scripts')
 </body>
 </html>

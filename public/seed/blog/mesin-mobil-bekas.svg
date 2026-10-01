@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" fill="#0c1a2e"/>
+  <!-- Engine block outline -->
+  <rect x="200" y="120" width="400" height="220" rx="18" fill="#1e3a5f" stroke="#334e7a" stroke-width="3"/>
+  <!-- Cylinders -->
+  <rect x="230" y="150" width="70" height="110" rx="8" fill="#0f2a4a" stroke="#475569" stroke-width="2"/>
+  <rect x="320" y="150" width="70" height="110" rx="8" fill="#0f2a4a" stroke="#475569" stroke-width="2"/>
+  <rect x="410" y="150" width="70" height="110" rx="8" fill="#0f2a4a" stroke="#475569" stroke-width="2"/>
+  <rect x="500" y="150" width="70" height="110" rx="8" fill="#0f2a4a" stroke="#475569" stroke-width="2"/>
+  <!-- Piston indicators -->
+  <rect x="250" y="188" width="30" height="36" rx="4" fill="#e11d48"/>
+  <rect x="340" y="175" width="30" height="49" rx="4" fill="#e11d48" opacity=".7"/>
+  <rect x="430" y="196" width="30" height="28" rx="4" fill="#e11d48" opacity=".5"/>
+  <rect x="520" y="168" width="30" height="56" rx="4" fill="#e11d48" opacity=".8"/>
+  <!-- Exhaust pipes -->
+  <rect x="220" y="340" width="360" height="20" rx="10" fill="#334155"/>
+  <rect x="280" y="355" width="20" height="35" rx="6" fill="#475569"/>
+  <rect x="380" y="355" width="20" height="35" rx="6" fill="#475569"/>
+  <rect x="480" y="355" width="20" height="35" rx="6" fill="#475569"/>
+  <!-- Steam/exhaust circles -->
+  <circle cx="290" cy="370" r="12" fill="none" stroke="#94a3b8" stroke-width="2" opacity=".4"/>
+  <circle cx="390" cy="362" r="9" fill="none" stroke="#94a3b8" stroke-width="2" opacity=".3"/>
+  <circle cx="490" cy="375" r="14" fill="none" stroke="#94a3b8" stroke-width="2" opacity=".35"/>
+  <!-- Spark plug indicators top -->
+  <circle cx="265" cy="152" r="8" fill="#fbbf24"/>
+  <circle cx="355" cy="152" r="8" fill="#fbbf24"/>
+  <circle cx="445" cy="152" r="8" fill="#fbbf24"/>
+  <circle cx="535" cy="152" r="8" fill="#fbbf24"/>
+  <!-- Wrenches decoration -->
+  <line x1="120" y1="200" x2="180" y2="260" stroke="#475569" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="115" cy="195" r="14" fill="none" stroke="#475569" stroke-width="8"/>
+  <line x1="620" y1="200" x2="680" y2="260" stroke="#475569" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="685" cy="265" r="14" fill="none" stroke="#475569" stroke-width="8"/>
+  <!-- Label -->
+  <rect x="0" y="0" width="200" height="40" fill="#e11d48"/>
+  <text x="14" y="26" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" fill="white">CEK MESIN KENDARAAN</text>
+</svg>

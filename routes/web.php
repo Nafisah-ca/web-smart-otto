@@ -18,6 +18,8 @@ use App\Http\Controllers\Admin\TariffController;
 use App\Http\Controllers\Admin\CmsController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomer;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Inspector\DashboardController as InspectorDashboard;
 use App\Http\Controllers\Inspector\InspectionController;
 use App\Http\Controllers\Transaction\TransactionController;
@@ -32,6 +34,10 @@ Route::get('/layanan', [HomeController::class, 'layanan'])->name('layanan');
 Route::get('/tentang', [HomeController::class, 'tentang'])->name('tentang');
 Route::get('/kontak', [HomeController::class, 'kontak'])->name('kontak');
 Route::get('/paket/{package}', [HomeController::class, 'showPackage'])->name('paket.show');
+
+// Blog public routes
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 /*
 |----------------------------------------------------------------------
@@ -128,6 +134,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Reports
     Route::get('/reports',        [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
+
+    // Blog Posts (CMS)
+    Route::resource('/posts', AdminPostController::class);
 });
 
 /*

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             TariffSeeder::class,
             BookingSeeder::class,
             CmsContentSeeder::class,
+            PostSeeder::class,
         ]);
     }
 }

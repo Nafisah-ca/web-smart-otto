@@ -19,6 +19,7 @@ class CmsController extends Controller
         'kontak'     => ['label' => 'Kontak & Informasi',   'desc' => 'Telepon, email, alamat, dan jam operasional.'],
         'footer'     => ['label' => 'Footer',               'desc' => 'Tagline footer, hak cipta, dan media sosial.'],
         'general'    => ['label' => 'Pengaturan Umum',      'desc' => 'Tentang kami, visi misi, dan FAQ.'],
+        'blog'       => ['label' => 'Artikel Blog',         'desc' => 'Kelola artikel blog yang tampil di halaman publik /blog.', 'external_url' => 'admin.posts.index'],
     ];
 
     public function index()
@@ -30,6 +31,12 @@ class CmsController extends Controller
     public function edit(string $section)
     {
         abort_unless(array_key_exists($section, $this->sections), 404);
+
+        // Blog punya halaman tersendiri
+        if ($section === 'blog') {
+            return redirect()->route('admin.posts.index');
+        }
+
         $data = $this->getData($section);
         $meta = $this->sections[$section];
         return view("admin.cms.sections.{$section}", compact('data', 'meta', 'section'));
