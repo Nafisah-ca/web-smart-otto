@@ -30,8 +30,24 @@ class HomeController extends Controller
             'stat_icon_inspectors'  => CmsContent::get('stat_icon_inspectors',  ''),
             'stat_icon_years'       => CmsContent::get('stat_icon_years',       ''),
 
-            // Keunggulan
-            'keunggulan_title'    => CmsContent::get('keunggulan_title',    'Mengapa Memilih Smart Otto?'),
+            // Kenapa Harus Kami — section baru (4 kartu)
+            'kenapa_judul'    => CmsContent::get('kenapa_judul',    'Kenapa Harus Kami?'),
+            'kenapa_subjudul' => CmsContent::get('kenapa_subjudul', 'Standar inspeksi tinggi agar Anda mendapat informasi kendaraan yang akurat dan terpercaya.'),
+            'kenapa_card1_icon'  => CmsContent::get('kenapa_card1_icon',  'monitor'),
+            'kenapa_card1_judul' => CmsContent::get('kenapa_card1_judul', 'Alat Canggih'),
+            'kenapa_card1_desc'  => CmsContent::get('kenapa_card1_desc',  ''),
+            'kenapa_card2_icon'  => CmsContent::get('kenapa_card2_icon',  'file-text'),
+            'kenapa_card2_judul' => CmsContent::get('kenapa_card2_judul', 'Laporan Online'),
+            'kenapa_card2_desc'  => CmsContent::get('kenapa_card2_desc',  ''),
+            'kenapa_card2_pdf'   => CmsContent::get('kenapa_card2_pdf',   ''),
+            'kenapa_card3_icon'  => CmsContent::get('kenapa_card3_icon',  'shield-check'),
+            'kenapa_card3_judul' => CmsContent::get('kenapa_card3_judul', 'Profesional'),
+            'kenapa_card3_desc'  => CmsContent::get('kenapa_card3_desc',  ''),
+            'kenapa_card4_icon'  => CmsContent::get('kenapa_card4_icon',  'eye'),
+            'kenapa_card4_judul' => CmsContent::get('kenapa_card4_judul', 'Transparan'),
+            'kenapa_card4_desc'  => CmsContent::get('kenapa_card4_desc',  ''),
+            // Keunggulan (lama, tidak ditampilkan tapi dibiarkan agar data tidak hilang)
+            'keunggulan_title'    => CmsContent::get('keunggulan_title',    ''),
             'keunggulan_subtitle' => CmsContent::get('keunggulan_subtitle', ''),
             'keunggulan_items'    => json_decode(CmsContent::get('keunggulan_items', '[]'), true) ?? [],
 

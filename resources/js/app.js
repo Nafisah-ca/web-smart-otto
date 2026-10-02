@@ -60,4 +60,59 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // ── Kenapa Harus Kami — Carousel ──────────────────────────────
+    const track = document.getElementById('kenapa-track');
+    const btnPrev = document.getElementById('kenapa-prev');
+    const btnNext = document.getElementById('kenapa-next');
+    const dots = document.querySelectorAll('.kenapa-dot');
+
+    if (track && btnPrev && btnNext) {
+        const cardWidth = () => {
+            const card = track.querySelector('.flex-none');
+            if (!card) return 292;
+            return card.offsetWidth + 20; // lebar + gap
+        };
+
+        // Scroll halus per kartu
+        btnNext.addEventListener('click', () => {
+            track.scrollBy({ left: cardWidth(), behavior: 'smooth' });
+        });
+        btnPrev.addEventListener('click', () => {
+            track.scrollBy({ left: -cardWidth(), behavior: 'smooth' });
+        });
+
+        // Update dot aktif saat scroll
+        const updateDots = () => {
+            if (!dots.length) return;
+            const idx = Math.round(track.scrollLeft / cardWidth());
+            dots.forEach((dot, i) => {
+                if (i === idx) {
+                    dot.classList.add('w-5', 'h-2', 'bg-primary-600');
+                    dot.classList.remove('w-2', 'bg-gray-300');
+                } else {
+                    dot.classList.remove('w-5', 'h-2', 'bg-primary-600');
+                    dot.classList.add('w-2', 'bg-gray-300');
+                }
+            });
+        };
+        track.addEventListener('scroll', updateDots, { passive: true });
+
+        // Klik dot → scroll ke kartu tersebut
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                track.scrollTo({ left: i * cardWidth(), behavior: 'smooth' });
+            });
+        });
+
+        // Touch/swipe support (mobile)
+        let touchStartX = 0;
+        track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+        track.addEventListener('touchend', e => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                track.scrollBy({ left: diff > 0 ? cardWidth() : -cardWidth(), behavior: 'smooth' });
+            }
+        }, { passive: true });
+    }
 });

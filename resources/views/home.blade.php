@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Beranda')
 @section('content')
 
@@ -97,13 +97,13 @@
             <div id="panel-{{ $i }}" class="kat-panel {{ $i !== 0 ? 'hidden' : '' }}">
                 <div class="flex flex-col md:flex-row">
                     {{-- Gambar --}}
-                    <div class="md:w-1/2 flex items-center justify-center p-8 bg-gray-50" style="min-height:260px;max-height:320px;overflow:hidden;">
+                    <div class="md:w-64 flex-shrink-0 flex items-center justify-center p-5 bg-gray-50" style="min-height:180px;max-height:220px;overflow:hidden;">
                         @if(!empty($kat['img']))
                         <img src="{{ asset($kat['img']) }}" alt="{{ $kat['name'] }}"
-                             class="w-full h-full object-contain" style="max-height:260px;">
+                             class="w-full h-full object-contain" style="max-height:180px;">
                         @else
-                        <div class="flex items-center justify-center w-full" style="height:200px;">
-                            <svg class="w-24 h-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex items-center justify-center w-full" style="height:160px;">
+                            <svg class="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
                                       d="M8 17a2 2 0 100-4 2 2 0 000 4zm8 0a2 2 0 100-4 2 2 0 000 4zM3 11l1.5-4.5A2 2 0 016.4 5h11.2a2 2 0 011.9 1.5L21 11v4a1 1 0 01-1 1h-1M3 11v4a1 1 0 001 1h1m-2-5h18"/>
                             </svg>
@@ -112,9 +112,9 @@
                     </div>
 
                     {{-- Daftar model --}}
-                    <div class="md:w-1/2 border-l border-gray-100">
+                    <div class="flex-1 border-l border-gray-100">
                         @if($kat['harga'])
-                        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                        <div class="px-4 py-3 border-b border-gray-100 bg-gray-50">
                             <p class="text-sm font-semibold text-gray-800">{{ $kat['harga'] }}</p>
                         </div>
                         @endif
@@ -128,12 +128,12 @@
                         <div class="grid grid-cols-2 divide-x divide-gray-100">
                             <ul>
                                 @foreach($col1 as $model)
-                                <li class="px-5 py-2.5 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors">{{ $model }}</li>
+                                <li class="px-4 py-2 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors">{{ $model }}</li>
                                 @endforeach
                             </ul>
                             <ul>
                                 @foreach($col2 as $model)
-                                <li class="px-5 py-2.5 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors">{{ $model }}</li>
+                                <li class="px-4 py-2 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors">{{ $model }}</li>
                                 @endforeach
                             </ul>
                         </div>
@@ -141,7 +141,7 @@
                         <div class="p-6 text-center text-sm text-gray-400">Belum ada model tersedia.</div>
                         @endif
 
-                        <div class="px-6 py-4 border-t border-gray-100">
+                        <div class="px-4 py-3 border-t border-gray-100">
                             <a href="{{ route('booking.create') }}" class="btn-primary btn-sm w-full justify-center">
                                 Booking Sekarang
                             </a>
@@ -188,37 +188,79 @@
     </div>
 </section>
 
-{{-- KEUNGGULAN --}}
-@if(!empty($cms['keunggulan_items']))
-<section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-10">
-        <h2 class="text-3xl font-bold text-gray-900">{{ $cms['keunggulan_title'] }}</h2>
-        @if($cms['keunggulan_subtitle'])
-        <p class="text-gray-500 mt-2 max-w-xl mx-auto">{{ $cms['keunggulan_subtitle'] }}</p>
-        @endif
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach($cms['keunggulan_items'] as $item)
-        <div class="card p-6 flex gap-4">
-            <div class="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center flex-shrink-0 border border-primary-100">
-                @if(!empty($item['icon']))
-                <img src="{{ asset($item['icon']) }}"
-                     alt="{{ $item['title'] ?? '' }}" class="w-7 h-7 object-contain">
-                @else
-                <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/>
-                </svg>
+{{-- KENAPA HARUS KAMI --}}
+<section class="py-14 bg-white overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {{-- Header --}}
+        <div class="flex items-start justify-between mb-8">
+            <div class="max-w-sm">
+                <span class="text-xs font-bold text-primary-600 uppercase tracking-widest">KEUNGGULAN KAMI</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-1 leading-tight">
+                    {{ $cms['kenapa_judul'] ?? 'Kenapa Harus Kami?' }}
+                </h2>
+                @if(!empty($cms['kenapa_subjudul']))
+                <p class="text-gray-500 text-sm mt-2 leading-relaxed">{{ $cms['kenapa_subjudul'] }}</p>
                 @endif
             </div>
-            <div>
-                <h3 class="font-semibold text-gray-900 text-sm">{{ $item['title'] ?? '' }}</h3>
-                <p class="text-sm text-gray-500 mt-1 leading-relaxed">{{ $item['desc'] ?? '' }}</p>
+            <div class="flex items-center gap-2 mt-1 flex-shrink-0">
+                <button id="kenapa-prev" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:border-primary-500 hover:text-primary-600 hover:bg-primary-50 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button id="kenapa-next" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:border-primary-500 hover:text-primary-600 hover:bg-primary-50 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
             </div>
         </div>
-        @endforeach
+        @php
+        $kenapaCards = [
+            ['icon'=>$cms['kenapa_card1_icon']??'monitor','judul'=>$cms['kenapa_card1_judul']??'Alat Canggih','desc'=>$cms['kenapa_card1_desc']??'','pdf'=>null],
+            ['icon'=>$cms['kenapa_card2_icon']??'file-text','judul'=>$cms['kenapa_card2_judul']??'Laporan Online','desc'=>$cms['kenapa_card2_desc']??'','pdf'=>$cms['kenapa_card2_pdf']??''],
+            ['icon'=>$cms['kenapa_card3_icon']??'shield-check','judul'=>$cms['kenapa_card3_judul']??'Profesional','desc'=>$cms['kenapa_card3_desc']??'','pdf'=>null],
+            ['icon'=>$cms['kenapa_card4_icon']??'eye','judul'=>$cms['kenapa_card4_judul']??'Transparan','desc'=>$cms['kenapa_card4_desc']??'','pdf'=>null],
+        ];
+        $iconPaths=['monitor'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2h-2"/>','file-text'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>','shield-check'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>','eye'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>','clock'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>','credit-card'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>'];
+        $defaultPath='<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/>';
+        @endphp
+        {{-- Carousel --}}
+        <div class="relative">
+            <div class="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none rounded-r-2xl"></div>
+            <div id="kenapa-track" class="flex gap-5 overflow-x-auto scroll-smooth pb-2" style="scrollbar-width:none;-ms-overflow-style:none;">
+                @foreach($kenapaCards as $card)
+                <div class="flex-none w-72 bg-white border border-gray-200 rounded-2xl p-6 flex flex-col hover:shadow-lg hover:border-primary-200 hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+                    <div class="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center mb-5 flex-shrink-0">
+                        <svg class="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {!! $iconPaths[$card['icon']] ?? $defaultPath !!}
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-gray-900 text-base mb-2">{{ $card['judul'] }}</h3>
+                        <p class="text-sm text-gray-500 leading-relaxed">{{ $card['desc'] }}</p>
+                    </div>
+                    <div class="mt-5">
+                        @if(!empty($card['pdf']))
+                            <a href="{{ Storage::url($card['pdf']) }}" target="_blank" rel="noopener noreferrer"
+                               class="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors">
+                                Lihat Contoh Laporan
+                            </a>
+                        @else
+                            <a href="{{ route('layanan') }}"
+                               class="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors">
+                                Lihat Detail
+                            </a>
+                        @endif
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        {{-- Dot indicators --}}
+        <div class="flex justify-center gap-2 mt-5" id="kenapa-dots">
+            @foreach($kenapaCards as $i => $card)
+            <button class="kenapa-dot transition-all duration-200 rounded-full {{ $i===0 ? 'w-5 h-2 bg-primary-600' : 'w-2 h-2 bg-gray-300 hover:bg-gray-400' }}" data-index="{{ $i }}"></button>
+            @endforeach
+        </div>
     </div>
 </section>
-@endif
 
 {{-- FAQ --}}
 @if(!empty($cms['faq_items']))

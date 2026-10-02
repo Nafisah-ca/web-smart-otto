@@ -1,0 +1,50 @@
+
+  Dropping all tables .......................................... 176.09ms DONE
+
+   INFO  Preparing database.  
+
+  Creating migration table ...................................... 25.62ms DONE
+
+   INFO  Running migrations.  
+
+  0001_01_01_000001_create_users_table ......................... 150.32ms DONE
+  2024_01_01_000002_create_vehicles_table ...................... 140.14ms DONE
+  2024_01_01_000003_create_inspection_packages_table ............ 16.87ms DONE
+  2024_01_01_000004_create_inspection_checklist_items_table ..... 80.43ms DONE
+  2024_01_01_000005_create_bookings_table ...................... 352.69ms DONE
+  2024_01_01_000006_create_inspection_results_table ............. 85.70ms DONE
+  2024_01_01_000007_create_tariffs_table ........................ 18.96ms DONE
+  2024_01_01_000008_create_transactions_table .................. 100.89ms DONE
+  2024_01_01_000009_create_transaction_items_table ............. 145.69ms DONE
+  2024_01_01_000010_create_cms_contents_table ................... 47.98ms DONE
+  2026_09_21_175239_create_cache_table .......................... 72.34ms DONE
+  2026_10_01_000011_create_posts_table .......................... 66.46ms DONE
+
+
+   INFO  Seeding database.  
+
+  Database\Seeders\UserSeeder ........................................ RUNNING  
+  Database\Seeders\UserSeeder .................................. 1,410 ms DONE  
+
+  Database\Seeders\InspectionPackageSeeder ........................... RUNNING  
+  Database\Seeders\InspectionPackageSeeder ......................... 6 ms DONE  
+
+  Database\Seeders\InspectionChecklistItemSeeder ..................... RUNNING  
+  Database\Seeders\InspectionChecklistItemSeeder .................. 10 ms DONE  
+
+  Database\Seeders\VehicleSeeder ..................................... RUNNING  
+  Database\Seeders\VehicleSeeder ................................... 0 ms DONE  
+
+  Database\Seeders\TariffSeeder ...................................... RUNNING  
+  Database\Seeders\TariffSeeder .................................... 8 ms DONE  
+
+  Database\Seeders\BookingSeeder ..................................... RUNNING  
+  Database\Seeders\BookingSeeder ................................... 0 ms DONE  
+
+  Database\Seeders\CmsContentSeeder .................................. RUNNING  
+  Database\Seeders\CmsContentSeeder .............................. 161 ms DONE  
+
+  Database\Seeders\PostSeeder ........................................ RUNNING  
+PostSeeder: 6 artikel blog berhasil di-seed.
+  Database\Seeders\PostSeeder ..................................... 35 ms DONE  
+

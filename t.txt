@@ -1,0 +1,8 @@
+$keys = ['keunggulan_badge','keunggulan_title','keunggulan_subtitle','keunggulan_items'];
+foreach($keys as $k) {
+    \App\Models\CmsContent::where('key',$k)->update(['group'=>'keunggulan']);
+}
+$all = \App\Models\CmsContent::whereIn('key',$keys)->get(['key','group','value']);
+foreach($all as $r) {
+    echo $r->key . ' | ' . $r->group . ' | ' . substr($r->value,0,40) . "\n";
+}

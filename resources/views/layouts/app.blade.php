@@ -37,12 +37,13 @@
             {{-- Auth Buttons --}}
             <div class="hidden md:flex items-center gap-3">
                 @auth
+                    {{-- Ikon profil bulat → dashboard sesuai role --}}
                     <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : (auth()->user()->isInspector() ? route('inspector.dashboard') : route('customer.dashboard')) }}"
-                       class="text-sm font-medium text-gray-600 hover:text-gray-900">Dashboard</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn-primary btn-sm">Keluar</button>
-                    </form>
+                       title="{{ auth()->user()->name }}"
+                       class="flex items-center justify-center w-9 h-9 rounded-full text-sm font-bold text-primary-700 hover:ring-2 hover:ring-primary-400 transition-all flex-shrink-0"
+                       style="background-color:#fdecea;">
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    </a>
                 @else
                     <a href="{{ route('login') }}" class="btn-secondary btn-sm">Masuk</a>
                     <a href="{{ route('booking.create') }}" class="btn-primary btn-sm">Booking Sekarang</a>
@@ -68,7 +69,13 @@
         <a href="{{ route('kontak') }}" class="block py-2 text-sm text-gray-700">Kontak</a>
         <div class="pt-2 border-t border-gray-100 flex gap-2">
             @auth
-                <a href="{{ route('customer.dashboard') }}" class="btn-secondary btn-sm flex-1 justify-center">Dashboard</a>
+                {{-- Ikon profil bulat → dashboard sesuai role --}}
+                <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : (auth()->user()->isInspector() ? route('inspector.dashboard') : route('customer.dashboard')) }}"
+                   title="{{ auth()->user()->name }}"
+                   class="flex items-center justify-center w-9 h-9 rounded-full text-sm font-bold text-primary-700 hover:ring-2 hover:ring-primary-400 transition-all flex-shrink-0"
+                   style="background-color:#fdecea;">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </a>
             @else
                 <a href="{{ route('login') }}" class="btn-secondary btn-sm flex-1 justify-center">Masuk</a>
                 <a href="{{ route('booking.create') }}" class="btn-primary btn-sm flex-1 justify-center">Booking</a>

@@ -13,17 +13,54 @@
 {{-- Top Nav --}}
 <nav class="bg-white border-b border-gray-200 sticky top-0 z-40">
     <div class="max-w-5xl mx-auto px-4 flex items-center justify-between h-14">
-        <a href="{{ route('home') }}" class="flex items-center gap-2">
+        {{-- Logo --}}
+        <a href="{{ route('home') }}" class="flex items-center gap-2 flex-shrink-0">
             <div class="w-7 h-7 bg-primary-600 rounded-md flex items-center justify-center">
                 <span class="text-white font-bold text-xs">SO</span>
             </div>
             <span class="font-bold text-gray-900">Smart Otto</span>
         </a>
-        <div class="flex items-center gap-4">
-            <span class="text-sm text-gray-600 hidden sm:block">Halo, <strong>{{ auth()->user()->name }}</strong></span>
+
+        {{-- Menu tengah --}}
+        <div class="hidden sm:flex items-center gap-5">
+            <a href="{{ route('home') }}"
+               class="text-sm font-medium {{ request()->routeIs('home') ? 'text-primary-600' : 'text-gray-500 hover:text-gray-800' }}">
+                Beranda
+            </a>
+            <a href="{{ route('layanan') }}"
+               class="text-sm font-medium {{ request()->routeIs('layanan') ? 'text-primary-600' : 'text-gray-500 hover:text-gray-800' }}">
+                Layanan
+            </a>
+            <a href="{{ route('tentang') }}"
+               class="text-sm font-medium {{ request()->routeIs('tentang') ? 'text-primary-600' : 'text-gray-500 hover:text-gray-800' }}">
+                Tentang
+            </a>
+            <a href="{{ route('kontak') }}"
+               class="text-sm font-medium {{ request()->routeIs('kontak') ? 'text-primary-600' : 'text-gray-500 hover:text-gray-800' }}">
+                Kontak
+            </a>
+        </div>
+
+        {{-- Kanan: ikon profil + tombol keluar --}}
+        <div class="flex items-center gap-3 flex-shrink-0">
+            {{-- Ikon profil --}}
+            <a href="{{ route('customer.dashboard') }}"
+               title="{{ auth()->user()->name }}"
+               class="flex items-center justify-center w-9 h-9 rounded-full text-sm font-bold text-primary-700 hover:ring-2 hover:ring-primary-400 transition-all"
+               style="background-color:#fdecea;">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+            </a>
+            {{-- Tombol keluar --}}
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="text-sm text-gray-500 hover:text-red-600">Keluar</button>
+                <button type="submit"
+                        class="text-sm text-gray-400 hover:text-red-600 transition-colors"
+                        title="Keluar">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                </button>
             </form>
         </div>
     </div>

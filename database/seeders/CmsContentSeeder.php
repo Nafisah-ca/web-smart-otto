@@ -79,7 +79,7 @@ class CmsContentSeeder extends Seeder
 
             if (!$existing) {
                 // Belum ada — insert dengan semua field
-                DB::table('cms_contents')->insert(array_merge($row, [
+                DB::table('cms_content')->insert(array_merge($row, [
                     'is_active'  => true,
                     'created_at' => $now,
                     'updated_at' => $now,
@@ -88,7 +88,7 @@ class CmsContentSeeder extends Seeder
                 // Sudah ada — update hanya field NON-image
                 // Field image (type=image) TIDAK ditimpa supaya upload admin tidak hilang
                 if ($existing->type !== 'image') {
-                    DB::table('cms_contents')->where('key', $row['key'])->update([
+                    DB::table('cms_content')->where('key', $row['key'])->update([
                         'label'      => $row['label'],
                         'value'      => $row['value'],
                         'updated_at' => $now,
@@ -96,7 +96,7 @@ class CmsContentSeeder extends Seeder
                 }
                 // Kalau image: hanya update label saja, value dibiarkan
                 else {
-                    DB::table('cms_contents')->where('key', $row['key'])->update([
+                    DB::table('cms_content')->where('key', $row['key'])->update([
                         'label'      => $row['label'],
                         'updated_at' => $now,
                     ]);
