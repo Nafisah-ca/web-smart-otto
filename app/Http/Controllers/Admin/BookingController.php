@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\InspectionPackage;
+use App\Models\Transaction;
+use App\Models\TransactionItem;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
@@ -13,7 +15,7 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Booking::with(['user', 'vehicle', 'package', 'inspector'])
+        $query = Booking::with(['user', 'vehicle', 'package', 'inspector', 'transaction'])
             ->orderByDesc('created_at');
 
         if ($request->status) {
@@ -95,11 +97,11 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id'      => 'required|exists:users,id',
-            'package_id'   => 'required|exists:inspection_packages,id',
+            'user_id'      => 'required|exists:user,id',
+            'package_id'   => 'required|exists:inspection_package,id',
             'booking_date' => 'required|date',
             'booking_time' => 'required|string',
-            'inspector_id' => 'nullable|exists:users,id',
+            'inspector_id' => 'nullable|exists:user,id',
             'notes'        => 'nullable|string|max:500',
         ]);
 
@@ -111,7 +113,7 @@ class BookingController extends Controller
             $request->validate([
                 'brand'        => 'required|string',
                 'model'        => 'required|string',
-                'plate_number' => 'required|string|unique:vehicles,plate_number',
+                'plate_number' => 'required|string',
                 'year'         => 'required|integer',
                 'type'         => 'required|in:motor,mobil,truk,bus',
             ]);
@@ -137,6 +139,31 @@ class BookingController extends Controller
             'notes'        => $request->notes,
             'confirmed_at' => now(),
         ]);
+
+        // Otomatis buat transaksi jika belum ada
+        $pkg = $booking->package;
+        $transaction = Transaction::create([
+            'transaction_code' => Transaction::generateCode(),
+            'booking_id'       => $booking->id,
+            'subtotal'         => 0,
+            'tax'              => 0,
+            'discount'         => 0,
+            'total'            => 0,
+            'payment_status'   => 'unpaid',
+        ]);
+
+        TransactionItem::create([
+            'transaction_id' => $transaction->id,
+            'tariff_id'      => null,
+            'item_name'      => 'Biaya Inspeksi - ' . $pkg->name,
+            'category'       => 'Inspeksi',
+            'price'          => $pkg->price,
+            'quantity'       => 1,
+            'unit'           => 'paket',
+            'subtotal'       => $pkg->price,
+        ]);
+
+        $transaction->recalculate();
 
         return redirect()->route('admin.bookings.show', $booking)
             ->with('success', 'Booking berhasil dibuat oleh admin.');

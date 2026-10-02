@@ -123,7 +123,12 @@
     @if($booking->transaction)
     @php $trx = $booking->transaction; @endphp
     <div class="card p-5">
-        <h3 class="font-semibold text-gray-800 mb-4">Tagihan</h3>
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-800">Rincian Tagihan & Pembayaran</h3>
+            <span class="badge-{{ $trx->payment_status_color }}">
+                {{ $trx->payment_status_label }}
+            </span>
+        </div>
         <div class="space-y-2 text-sm">
             @foreach($trx->items as $item)
             <div class="flex justify-between">
@@ -133,18 +138,37 @@
             @endforeach
             <div class="border-t border-gray-100 pt-2 flex justify-between text-xs text-gray-500">
                 <span>PPN 11%</span>
-                <span>Rp {{ number_format($trx->tax, 0, ',', '.') }}</span>
+                <span>{{ $trx->formatted_tax }}</span>
             </div>
+            @if($trx->discount > 0)
+            <div class="flex justify-between text-xs text-green-600">
+                <span>Diskon</span>
+                <span>- {{ $trx->formatted_discount }}</span>
+            </div>
+            @endif
             <div class="flex justify-between font-bold text-gray-900 text-base border-t border-gray-200 pt-2">
                 <span>Total</span>
-                <span>{{ $trx->formatted_total }}</span>
+                <span class="text-primary-600">{{ $trx->formatted_total }}</span>
             </div>
-            <div class="flex justify-between text-sm pt-1">
-                <span class="text-gray-500">Status Pembayaran</span>
-                <span class="badge-{{ $trx->payment_status === 'paid' ? 'green' : ($trx->payment_status === 'partial' ? 'yellow' : 'red') }}">
-                    {{ $trx->payment_status_label }}
-                </span>
+            @if($trx->payment_method)
+            <div class="flex justify-between text-xs text-gray-500 pt-1">
+                <span>Metode Pembayaran</span>
+                <span class="font-medium text-gray-800">{{ $trx->payment_channel ?? $trx->payment_method }}</span>
             </div>
+            @endif
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-gray-100 flex flex-wrap gap-2 items-center justify-between">
+            <a href="{{ route('customer.transactions.invoice', $booking) }}" target="_blank" class="btn-secondary btn-sm text-xs">
+                📄 Cetak Invoice
+            </a>
+            <a href="{{ route('customer.transactions.show', $booking) }}" class="btn-primary btn-sm text-xs flex items-center gap-1">
+                @if($trx->payment_status === 'paid')
+                Lihat Rincian Pembayaran & QRIS
+                @else
+                💳 Bayar Sekarang / Tampilkan QRIS →
+                @endif
+            </a>
         </div>
     </div>
     @endif

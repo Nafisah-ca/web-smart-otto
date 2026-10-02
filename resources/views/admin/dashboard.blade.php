@@ -27,10 +27,23 @@
         @endforeach
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="card p-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="card p-5 border-l-4 border-primary-500">
             <p class="text-xs text-gray-500 uppercase tracking-wide">Revenue Bulan Ini</p>
             <p class="text-2xl font-bold text-primary-600 mt-1">Rp {{ number_format($revenueMonth, 0, ',', '.') }}</p>
+        </div>
+        <div class="card p-5 border-l-4 border-amber-500 {{ $pendingTransactionsCount > 0 ? 'bg-amber-50/50' : '' }}">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Verifikasi Pembayaran</p>
+                    <p class="text-2xl font-bold text-amber-600 mt-1">{{ $pendingTransactionsCount }}</p>
+                </div>
+                @if($pendingTransactionsCount > 0)
+                <a href="{{ route('admin.transactions.index', ['status' => 'pending']) }}" class="btn-primary btn-sm text-xs bg-amber-600 hover:bg-amber-700">
+                    Periksa →
+                </a>
+                @endif
+            </div>
         </div>
         <div class="card p-5">
             <p class="text-xs text-gray-500 uppercase tracking-wide">Total Customer</p>

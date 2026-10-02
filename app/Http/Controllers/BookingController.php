@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\InspectionPackage;
+use App\Models\Transaction;
+use App\Models\TransactionItem;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -88,6 +90,31 @@ class BookingController extends Controller
             'notes'        => $request->notes,
         ]);
 
+        // Buat Transaksi otomatis
+        $pkg = $booking->package;
+        $transaction = Transaction::create([
+            'transaction_code' => Transaction::generateCode(),
+            'booking_id'       => $booking->id,
+            'subtotal'         => 0,
+            'tax'              => 0,
+            'discount'         => 0,
+            'total'            => 0,
+            'payment_status'   => 'unpaid',
+        ]);
+
+        TransactionItem::create([
+            'transaction_id' => $transaction->id,
+            'tariff_id'      => null,
+            'item_name'      => 'Biaya Inspeksi - ' . $pkg->name,
+            'category'       => 'Inspeksi',
+            'price'          => $pkg->price,
+            'quantity'       => 1,
+            'unit'           => 'paket',
+            'subtotal'       => $pkg->price,
+        ]);
+
+        $transaction->recalculate();
+
         return redirect()->route('booking.success', $booking)
             ->with('success', 'Booking berhasil dibuat!');
     }
@@ -96,7 +123,7 @@ class BookingController extends Controller
     {
         // Pastikan booking milik user ini
         abort_if($booking->user_id !== Auth::id(), 403);
-        $booking->load('vehicle', 'package');
+        $booking->load(['vehicle', 'package', 'transaction.items']);
         return view('booking.success', compact('booking'));
     }
 

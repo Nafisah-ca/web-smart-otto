@@ -9,6 +9,7 @@ use App\Http\Controllers\Customer\DashboardController as CustomerDashboard;
 use App\Http\Controllers\Customer\HistoryController;
 use App\Http\Controllers\Customer\ProfileController;
 use App\Http\Controllers\Customer\VehicleController as CustomerVehicle;
+use App\Http\Controllers\Customer\TransactionController as CustomerTransaction;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\BookingController as AdminBooking;
 use App\Http\Controllers\Admin\InspectorController;
@@ -25,9 +26,9 @@ use App\Http\Controllers\Inspector\InspectionController;
 use App\Http\Controllers\Transaction\TransactionController;
 
 /*
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | PUBLIC ROUTES
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/layanan', [HomeController::class, 'layanan'])->name('layanan');
@@ -40,9 +41,9 @@ Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 /*
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | AUTH ROUTES (Customer)
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
     Route::get('/login',    [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -54,9 +55,9 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout')->middleware('auth');
 
 /*
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | BOOKING ROUTES (wajib login customer)
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/booking',           [BookingController::class, 'create'])->name('booking.create');
@@ -66,30 +67,36 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 });
 
 /*
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | CUSTOMER PORTAL ROUTES
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer.')->group(function () {
-    Route::get('/dashboard',             [CustomerDashboard::class, 'index'])->name('dashboard');
-    Route::get('/riwayat',               [HistoryController::class, 'index'])->name('history');
-    Route::get('/riwayat/{booking}',     [HistoryController::class, 'show'])->name('history.show');
-    Route::get('/laporan/{booking}',     [HistoryController::class, 'report'])->name('history.report');
+    Route::get('/dashboard',              [CustomerDashboard::class, 'index'])->name('dashboard');
+    Route::get('/riwayat',                [HistoryController::class, 'index'])->name('history');
+    Route::get('/riwayat/{booking}',      [HistoryController::class, 'show'])->name('history.show');
+    Route::get('/laporan/{booking}',      [HistoryController::class, 'report'])->name('history.report');
     Route::post('/laporan/{booking}/sign',[HistoryController::class, 'sign'])->name('history.sign');
-    Route::get('/profil',                [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profil',                [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/kendaraan',             [CustomerVehicle::class, 'index'])->name('vehicles.index');
-    Route::get('/kendaraan/tambah',      [CustomerVehicle::class, 'create'])->name('vehicles.create');
-    Route::post('/kendaraan',            [CustomerVehicle::class, 'store'])->name('vehicles.store');
+    Route::get('/profil',                 [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profil',                 [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/kendaraan',              [CustomerVehicle::class, 'index'])->name('vehicles.index');
+    Route::get('/kendaraan/tambah',       [CustomerVehicle::class, 'create'])->name('vehicles.create');
+    Route::post('/kendaraan',             [CustomerVehicle::class, 'store'])->name('vehicles.store');
     Route::get('/kendaraan/{vehicle}/edit', [CustomerVehicle::class, 'edit'])->name('vehicles.edit');
-    Route::put('/kendaraan/{vehicle}',   [CustomerVehicle::class, 'update'])->name('vehicles.update');
-    Route::delete('/kendaraan/{vehicle}',[CustomerVehicle::class, 'destroy'])->name('vehicles.destroy');
+    Route::put('/kendaraan/{vehicle}',    [CustomerVehicle::class, 'update'])->name('vehicles.update');
+    Route::delete('/kendaraan/{vehicle}', [CustomerVehicle::class, 'destroy'])->name('vehicles.destroy');
+
+    // Customer Transactions & Payment (QRIS, Transfer, dll)
+    Route::get('/transaksi',              [CustomerTransaction::class, 'index'])->name('transactions.index');
+    Route::get('/transaksi/{booking}',    [CustomerTransaction::class, 'show'])->name('transactions.show');
+    Route::post('/transaksi/{booking}/pay',[CustomerTransaction::class, 'pay'])->name('transactions.pay');
+    Route::get('/transaksi/{booking}/invoice', [CustomerTransaction::class, 'invoice'])->name('transactions.invoice');
 });
 
 /*
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | ADMIN ROUTES
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -106,6 +113,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/bookings/{booking}/cancel',  [AdminBooking::class, 'cancel'])->name('bookings.cancel');
     Route::get('/bookings/create',             [AdminBooking::class, 'create'])->name('bookings.create');
     Route::post('/bookings',                   [AdminBooking::class, 'store'])->name('bookings.store');
+
+    // Transactions Menu (CMS & Overview)
+    Route::get('/transactions',                [TransactionController::class, 'index'])->name('transactions.index');
 
     // Inspectors (CMS)
     Route::resource('/inspectors', InspectorController::class);
@@ -140,9 +150,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 /*
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | INSPECTOR ROUTES
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:inspector'])->prefix('inspector')->name('inspector.')->group(function () {
     Route::get('/dashboard',                        [InspectorDashboard::class, 'index'])->name('dashboard');
@@ -156,14 +166,18 @@ Route::middleware(['auth', 'role:inspector'])->prefix('inspector')->name('inspec
 });
 
 /*
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | TRANSACTION ROUTES (admin + inspector access)
-|----------------------------------------------------------------------
+|--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin,inspector'])->prefix('transaksi')->name('transaction.')->group(function () {
-    Route::get('/{booking}',           [TransactionController::class, 'show'])->name('show');
-    Route::post('/{booking}',          [TransactionController::class, 'store'])->name('store');
-    Route::post('/{booking}/item',     [TransactionController::class, 'addItem'])->name('item.add');
-    Route::delete('/{booking}/item/{item}', [TransactionController::class, 'removeItem'])->name('item.remove');
-    Route::post('/{booking}/payment',  [TransactionController::class, 'payment'])->name('payment');
+    Route::get('/{booking}',                 [TransactionController::class, 'show'])->name('show');
+    Route::post('/{booking}',                [TransactionController::class, 'store'])->name('store');
+    Route::post('/{booking}/item',           [TransactionController::class, 'addItem'])->name('item.add');
+    Route::delete('/{booking}/item/{item}',  [TransactionController::class, 'removeItem'])->name('item.remove');
+    Route::post('/{booking}/discount',       [TransactionController::class, 'updateDiscount'])->name('discount');
+    Route::post('/{booking}/payment',        [TransactionController::class, 'payment'])->name('payment');
+    Route::post('/{booking}/confirm-payment',[TransactionController::class, 'confirmPayment'])->name('confirm');
+    Route::post('/{booking}/reject-payment', [TransactionController::class, 'rejectPayment'])->name('reject');
+    Route::get('/{booking}/invoice',         [TransactionController::class, 'invoice'])->name('invoice');
 });

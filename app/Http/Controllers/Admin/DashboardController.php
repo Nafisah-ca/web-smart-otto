@@ -29,6 +29,9 @@ class DashboardController extends Controller
             ->whereMonth('paid_at', now()->month)
             ->sum('total');
 
+        // Transaksi pending verifikasi
+        $pendingTransactionsCount = Transaction::where('payment_status', 'pending')->count();
+
         // Booking hari ini
         $todayBookings = Booking::whereDate('booking_date', today())
             ->with(['user', 'vehicle', 'package', 'inspector'])
@@ -47,7 +50,7 @@ class DashboardController extends Controller
 
         return view('admin.dashboard', compact(
             'bookingStats', 'bookingChart', 'revenueMonth',
-            'todayBookings', 'pendingBookings',
+            'pendingTransactionsCount', 'todayBookings', 'pendingBookings',
             'totalCustomers', 'totalInspectors'
         ));
     }
