@@ -46,8 +46,8 @@ class CmsContentSeeder extends Seeder
             ["key"=>"cta_button_text", "label"=>"Teks Tombol CTA","group"=>"cta","type"=>"text",    "value"=>"Booking Sekarang"],
 
             // KONTAK
-            ["key"=>"site_phone",      "label"=>"Telepon",            "group"=>"kontak","type"=>"text",    "value"=>""],
-            ["key"=>"site_email",      "label"=>"Email",              "group"=>"kontak","type"=>"text",    "value"=>""],
+            ["key"=>"site_phone",      "label"=>"Telepon / WhatsApp", "group"=>"kontak","type"=>"text",    "value"=>"085955173787"],
+            ["key"=>"site_email",      "label"=>"Email",              "group"=>"kontak","type"=>"text",    "value"=>"smartotto68@gmail.com"],
             ["key"=>"site_address",    "label"=>"Alamat",             "group"=>"kontak","type"=>"textarea","value"=>""],
             ["key"=>"site_maps_embed", "label"=>"Maps Embed",         "group"=>"kontak","type"=>"text",    "value"=>""],
             ["key"=>"ops_weekday",     "label"=>"Jam Senin-Jumat",    "group"=>"kontak","type"=>"text",    "value"=>"Senin - Jumat: 08.00 - 17.00 WIB"],

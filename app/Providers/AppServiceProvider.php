@@ -20,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('sitePhone',       CmsContent::get('site_phone',       ''));
                 $view->with('siteEmail',       CmsContent::get('site_email',       ''));
                 $view->with('siteAddress',     CmsContent::get('site_address',     ''));
+                $view->with('siteMapsEmbed',   CmsContent::get('site_maps_embed',  ''));
                 $view->with('footerTagline',   CmsContent::get('footer_tagline',   ''));
                 $view->with('footerCopyright', CmsContent::get('footer_copyright', '© ' . date('Y') . ' Smart Otto. Seluruh hak cipta dilindungi.'));
                 $view->with('footerSocialIg',  CmsContent::get('footer_social_ig', ''));
