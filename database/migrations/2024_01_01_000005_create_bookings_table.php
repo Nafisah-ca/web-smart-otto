@@ -8,13 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('bookings', function (Blueprint $table) {
+        Schema::create('booking', function (Blueprint $table) {
             $table->id();
             $table->string('booking_code')->unique();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('vehicle_id')->constrained()->onDelete('cascade');
-            $table->foreignId('package_id')->constrained('inspection_packages')->onDelete('cascade');
-            $table->foreignId('inspector_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('user_id')->constrained('user')->onDelete('cascade');
+            $table->foreignId('vehicle_id')->constrained('vehicle')->onDelete('cascade');
+            $table->foreignId('package_id')->constrained('inspection_package')->onDelete('cascade');
+            $table->foreignId('inspector_id')->nullable()->constrained('user')->onDelete('set null');
             $table->date('booking_date');
             $table->time('booking_time');
             $table->enum('status', [
@@ -34,6 +34,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('bookings');
+        Schema::dropIfExists('booking');
     }
 };

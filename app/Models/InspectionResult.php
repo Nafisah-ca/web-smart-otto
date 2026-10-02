@@ -9,6 +9,8 @@ class InspectionResult extends Model
 {
     use HasFactory;
 
+    protected $table = 'inspection_result';
+
     protected $fillable = [
         'booking_id', 'checklist_json', 'condition_summary',
         'recommendation', 'photos', 'inspector_notes',

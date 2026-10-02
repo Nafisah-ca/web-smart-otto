@@ -9,6 +9,8 @@ class InspectionChecklistItem extends Model
 {
     use HasFactory;
 
+    protected $table = 'inspection_checklist_item';
+
     protected $fillable = [
         'package_id', 'item_name', 'category', 'description', 'sort_order',
     ];

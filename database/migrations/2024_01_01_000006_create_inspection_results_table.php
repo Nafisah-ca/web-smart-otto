@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('inspection_results', function (Blueprint $table) {
+        Schema::create('inspection_result', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('booking_id')->constrained()->onDelete('cascade');
+            $table->foreignId('booking_id')->constrained('booking')->onDelete('cascade');
             $table->json('checklist_json')->nullable();
             $table->enum('condition_summary', ['baik', 'cukup', 'perlu_perhatian', 'kritis'])->nullable();
             $table->text('recommendation')->nullable();
@@ -27,6 +27,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('inspection_results');
+        Schema::dropIfExists('inspection_result');
     }
 };

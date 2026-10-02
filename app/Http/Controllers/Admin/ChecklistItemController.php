@@ -29,7 +29,7 @@ class ChecklistItemController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'package_id' => 'required|exists:inspection_packages,id',
+            'package_id' => 'required|exists:inspection_package,id',
             'item_name'  => 'required|string|max:255',
             'category'   => 'required|string|max:100',
             'description'=> 'nullable|string',
@@ -49,7 +49,7 @@ class ChecklistItemController extends Controller
     public function update(Request $request, InspectionChecklistItem $checklistItem)
     {
         $request->validate([
-            'package_id' => 'required|exists:inspection_packages,id',
+            'package_id' => 'required|exists:inspection_package,id',
             'item_name'  => 'required|string|max:255',
             'category'   => 'required|string|max:100',
         ]);

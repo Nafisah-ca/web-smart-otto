@@ -25,7 +25,7 @@ class VehicleController extends Controller
         $request->validate([
             'brand'        => 'required|string|max:100',
             'model'        => 'required|string|max:100',
-            'plate_number' => 'required|string|max:20|unique:vehicles,plate_number',
+            'plate_number' => 'required|string|max:20|unique:vehicle,plate_number',
             'year'         => 'required|integer|min:1990|max:' . date('Y'),
             'type'         => 'required|in:motor,mobil,truk,bus',
             'color'        => 'nullable|string|max:50',
@@ -62,7 +62,7 @@ class VehicleController extends Controller
         $request->validate([
             'brand'        => 'required|string|max:100',
             'model'        => 'required|string|max:100',
-            'plate_number' => 'required|string|max:20|unique:vehicles,plate_number,' . $vehicle->id,
+            'plate_number' => 'required|string|max:20|unique:vehicle,plate_number,' . $vehicle->id,
             'year'         => 'required|integer|min:1990|max:' . date('Y'),
             'type'         => 'required|in:motor,mobil,truk,bus',
             'color'        => 'nullable|string|max:50',

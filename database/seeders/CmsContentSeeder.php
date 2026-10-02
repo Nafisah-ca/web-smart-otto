@@ -75,7 +75,7 @@ class CmsContentSeeder extends Seeder
         ];
 
         foreach ($rows as $row) {
-            $existing = DB::table('cms_contents')->where('key', $row['key'])->first();
+            $existing = DB::table('cms_content')->where('key', $row['key'])->first();
 
             if (!$existing) {
                 // Belum ada — insert dengan semua field

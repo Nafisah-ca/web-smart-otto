@@ -54,7 +54,7 @@ class BookingController extends Controller
 
     public function assign(Request $request, Booking $booking)
     {
-        $request->validate(['inspector_id' => 'required|exists:users,id']);
+        $request->validate(['inspector_id' => 'required|exists:user,id']);
 
         $inspector = User::findOrFail($request->inspector_id);
         abort_if($inspector->role !== 'inspector', 422, 'User bukan inspektor.');

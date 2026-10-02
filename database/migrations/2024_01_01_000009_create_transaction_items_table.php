@@ -8,10 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('transaction_items', function (Blueprint $table) {
+        Schema::create('transaction_item', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained()->onDelete('cascade');
-            $table->foreignId('tariff_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('transaction_id')->constrained('transaction')->onDelete('cascade');
+            $table->foreignId('tariff_id')->nullable()->constrained('tariff')->onDelete('set null');
             $table->string('item_name');
             $table->string('category')->nullable();
             $table->decimal('price', 12, 2);
@@ -25,6 +25,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('transaction_items');
+        Schema::dropIfExists('transaction_item');
     }
 };

@@ -10,6 +10,8 @@ class CmsContent extends Model
 {
     use HasFactory;
 
+    protected $table = 'cms_content';
+
     protected $fillable = [
         'key', 'label', 'group', 'type', 'value', 'is_active',
     ];

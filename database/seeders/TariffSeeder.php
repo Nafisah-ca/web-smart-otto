@@ -56,6 +56,6 @@ class TariffSeeder extends Seeder
             ];
         }
 
-        DB::table('tariffs')->insert($rows);
+        DB::table('tariff')->insert($rows);
     }
 }

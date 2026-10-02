@@ -56,7 +56,7 @@ class TransactionController extends Controller
     public function addItem(Request $request, Booking $booking)
     {
         $request->validate([
-            'tariff_id' => 'nullable|exists:tariffs,id',
+            'tariff_id' => 'nullable|exists:tariff,id',
             'item_name' => 'required|string|max:255',
             'category'  => 'required|string|max:100',
             'price'     => 'required|numeric|min:0',

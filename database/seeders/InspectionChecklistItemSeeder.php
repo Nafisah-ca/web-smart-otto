@@ -67,6 +67,6 @@ class InspectionChecklistItemSeeder extends Seeder
             $rows[] = array_merge($item, ['package_id' => 3, 'description' => null, 'created_at' => $now, 'updated_at' => $now]);
         }
 
-        DB::table('inspection_checklist_items')->insert($rows);
+        DB::table('inspection_checklist_item')->insert($rows);
     }
 }

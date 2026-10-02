@@ -9,6 +9,8 @@ class Tariff extends Model
 {
     use HasFactory;
 
+    protected $table = 'tariff';
+
     protected $fillable = [
         'name', 'category', 'price', 'unit',
         'description', 'active_from', 'active_until', 'is_active',

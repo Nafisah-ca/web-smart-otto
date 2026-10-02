@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 class Post extends Model
 {
+    protected $table = 'post';
+
     protected $fillable = [
         'title',
         'slug',

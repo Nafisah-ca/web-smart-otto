@@ -8,10 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('transaction', function (Blueprint $table) {
             $table->id();
             $table->string('transaction_code')->unique();
-            $table->foreignId('booking_id')->constrained()->onDelete('cascade');
+            $table->foreignId('booking_id')->constrained('booking')->onDelete('cascade');
             $table->decimal('subtotal', 12, 2)->default(0);
             $table->decimal('tax', 12, 2)->default(0);
             $table->decimal('discount', 12, 2)->default(0);
@@ -26,6 +26,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('transaction');
     }
 };
