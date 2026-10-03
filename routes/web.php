@@ -36,6 +36,9 @@ Route::get('/tentang', [HomeController::class, 'tentang'])->name('tentang');
 Route::get('/kontak', [HomeController::class, 'kontak'])->name('kontak');
 Route::get('/paket/{package}', [HomeController::class, 'showPackage'])->name('paket.show');
 
+// Halaman detail keunggulan
+Route::get('/keunggulan/{slug}', [\App\Http\Controllers\KeunggulanController::class, 'show'])->name('keunggulan.show');
+
 // Blog public routes
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');

@@ -14,8 +14,7 @@ class CmsController extends Controller
         'hero'              => ['label' => 'Hero / Banner Utama',   'desc' => 'Judul, subjudul, dan tombol utama halaman beranda.'],
         'stats'             => ['label' => 'Statistik',             'desc' => 'Angka-angka statistik yang ditampilkan di beranda.'],
         'kategori'          => ['label' => 'Kategori Kendaraan',    'desc' => 'Daftar kategori dan model kendaraan yang dilayani.'],
-        'kenapa_harus_kami' => ['label' => 'Kenapa Harus Kami?',    'desc' => 'Section keunggulan 4 kartu di beranda.'],
-        'keunggulan'        => ['label' => 'Keunggulan Kami (lama)','desc' => 'Section lama — sudah digantikan oleh "Kenapa Harus Kami?".'],
+        'kenapa_harus_kami' => ['label' => 'Kenapa Harus Kami?',    'desc' => 'Section keunggulan 5 kartu di beranda.'],
         'cara_kerja'        => ['label' => 'Cara Kerja',            'desc' => 'Langkah-langkah alur inspeksi kendaraan.'],
         'cta'               => ['label' => 'Call to Action',        'desc' => 'Teks ajakan di bagian bawah beranda.'],
         'kontak'            => ['label' => 'Kontak & Informasi',    'desc' => 'Telepon, email, alamat, dan jam operasional.'],
@@ -55,7 +54,6 @@ class CmsController extends Controller
             'stats'             => $this->saveStats($request),
             'kategori'          => $this->saveKategori($request),
             'kenapa_harus_kami' => $this->saveKenapaHarusKami($request),
-            'keunggulan'        => $this->saveKeunggulan($request),
             'cara_kerja'        => $this->saveCaraKerja($request),
             'cta'               => $this->saveSimple($request, ['cta_title','cta_subtitle','cta_button_text']),
             'kontak'            => $this->saveSimple($request, ['site_phone','site_email','site_address','site_maps_embed','ops_weekday','ops_saturday','ops_sunday']),
@@ -96,6 +94,7 @@ class CmsController extends Controller
                 'kenapa_card2_icon','kenapa_card2_judul','kenapa_card2_desc','kenapa_card2_pdf',
                 'kenapa_card3_icon','kenapa_card3_judul','kenapa_card3_desc',
                 'kenapa_card4_icon','kenapa_card4_judul','kenapa_card4_desc',
+                'kenapa_card5_icon','kenapa_card5_judul','kenapa_card5_desc','kenapa_card5_badge',
             ],
             'keunggulan'        => ['keunggulan_title','keunggulan_subtitle','keunggulan_items'],
             'cara_kerja'        => ['cara_kerja_title','cara_kerja_subtitle','cara_kerja_steps'],
@@ -118,9 +117,8 @@ class CmsController extends Controller
     private function saveKenapaHarusKami(Request $request): void
     {
         $request->validate([
-            'kenapa_judul'    => 'nullable|string|max:255',
-            'kenapa_subjudul' => 'nullable|string|max:500',
-            // teks per kartu
+            'kenapa_judul'       => 'nullable|string|max:255',
+            'kenapa_subjudul'    => 'nullable|string|max:500',
             'kenapa_card1_icon'  => 'nullable|string|max:100',
             'kenapa_card1_judul' => 'nullable|string|max:255',
             'kenapa_card1_desc'  => 'nullable|string',
@@ -133,21 +131,23 @@ class CmsController extends Controller
             'kenapa_card4_icon'  => 'nullable|string|max:100',
             'kenapa_card4_judul' => 'nullable|string|max:255',
             'kenapa_card4_desc'  => 'nullable|string',
-            // upload PDF
+            'kenapa_card5_icon'  => 'nullable|string|max:100',
+            'kenapa_card5_judul' => 'nullable|string|max:255',
+            'kenapa_card5_desc'  => 'nullable|string',
+            'kenapa_card5_badge' => 'nullable|string|max:50',
             'value_file'         => 'nullable|file|mimes:pdf|max:5120',
         ]);
 
-        // Simpan field teks
         $textKeys = [
             'kenapa_judul','kenapa_subjudul',
             'kenapa_card1_icon','kenapa_card1_judul','kenapa_card1_desc',
             'kenapa_card2_icon','kenapa_card2_judul','kenapa_card2_desc',
             'kenapa_card3_icon','kenapa_card3_judul','kenapa_card3_desc',
             'kenapa_card4_icon','kenapa_card4_judul','kenapa_card4_desc',
+            'kenapa_card5_icon','kenapa_card5_judul','kenapa_card5_desc','kenapa_card5_badge',
         ];
         $this->saveSimple($request, $textKeys);
 
-        // Simpan file PDF (kenapa_card2_pdf)
         $this->handleFileUpload($request, 'value_file', 'kenapa_card2_pdf', 'cms');
     }
 

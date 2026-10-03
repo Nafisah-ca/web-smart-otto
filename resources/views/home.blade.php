@@ -189,76 +189,135 @@
 </section>
 
 {{-- KENAPA HARUS KAMI --}}
-<section class="py-14 bg-white overflow-hidden">
+<section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {{-- Header --}}
-        <div class="flex items-start justify-between mb-8">
-            <div class="max-w-sm">
-                <span class="text-xs font-bold text-primary-600 uppercase tracking-widest">KEUNGGULAN KAMI</span>
-                <h2 class="text-3xl font-bold text-gray-900 mt-1 leading-tight">
+        <div class="flex items-start justify-between mb-10">
+            <div class="flex-1 text-center">
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-primary-600 uppercase tracking-widest mb-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-600"></span>
+                    KEUNGGULAN KAMI
+                </span>
+                <h2 class="text-3xl font-bold text-gray-900 leading-tight">
                     {{ $cms['kenapa_judul'] ?? 'Kenapa Harus Kami?' }}
                 </h2>
                 @if(!empty($cms['kenapa_subjudul']))
                 <p class="text-gray-500 text-sm mt-2 leading-relaxed">{{ $cms['kenapa_subjudul'] }}</p>
                 @endif
             </div>
+            {{-- Tombol panah --}}
             <div class="flex items-center gap-2 mt-1 flex-shrink-0">
-                <button id="kenapa-prev" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:border-primary-500 hover:text-primary-600 hover:bg-primary-50 transition-all">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                <button id="kenapa-prev"
+                        class="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400
+                               hover:border-primary-500 hover:text-primary-600 hover:bg-primary-50 active:scale-95 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
                 </button>
-                <button id="kenapa-next" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:border-primary-500 hover:text-primary-600 hover:bg-primary-50 transition-all">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <button id="kenapa-next"
+                        class="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400
+                               hover:border-primary-500 hover:text-primary-600 hover:bg-primary-50 active:scale-95 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
                 </button>
             </div>
         </div>
+
         @php
         $kenapaCards = [
-            ['icon'=>$cms['kenapa_card1_icon']??'monitor','judul'=>$cms['kenapa_card1_judul']??'Alat Canggih','desc'=>$cms['kenapa_card1_desc']??'','pdf'=>null],
-            ['icon'=>$cms['kenapa_card2_icon']??'file-text','judul'=>$cms['kenapa_card2_judul']??'Laporan Online','desc'=>$cms['kenapa_card2_desc']??'','pdf'=>$cms['kenapa_card2_pdf']??''],
-            ['icon'=>$cms['kenapa_card3_icon']??'shield-check','judul'=>$cms['kenapa_card3_judul']??'Profesional','desc'=>$cms['kenapa_card3_desc']??'','pdf'=>null],
-            ['icon'=>$cms['kenapa_card4_icon']??'eye','judul'=>$cms['kenapa_card4_judul']??'Transparan','desc'=>$cms['kenapa_card4_desc']??'','pdf'=>null],
+            ['icon'=>$cms['kenapa_card1_icon']??'monitor',        'judul'=>$cms['kenapa_card1_judul']??'Alat Canggih',           'desc'=>$cms['kenapa_card1_desc']??'','type'=>'link','href'=>route('keunggulan.show','alat-canggih'),   'btn'=>'Lihat Detail',            'badge'=>''],
+            ['icon'=>$cms['kenapa_card2_icon']??'file-text',      'judul'=>$cms['kenapa_card2_judul']??'Laporan Online',         'desc'=>$cms['kenapa_card2_desc']??'','type'=>'pdf', 'href'=>!empty($cms['kenapa_card2_pdf'])?Storage::url($cms['kenapa_card2_pdf']):'#','btn'=>'Lihat Contoh Laporan','badge'=>''],
+            ['icon'=>$cms['kenapa_card3_icon']??'shield-check',   'judul'=>$cms['kenapa_card3_judul']??'Profesional',           'desc'=>$cms['kenapa_card3_desc']??'','type'=>'link','href'=>route('keunggulan.show','profesional'),   'btn'=>'Lihat Detail',            'badge'=>''],
+            ['icon'=>$cms['kenapa_card4_icon']??'eye',            'judul'=>$cms['kenapa_card4_judul']??'Transparan',            'desc'=>$cms['kenapa_card4_desc']??'','type'=>'link','href'=>route('keunggulan.show','transparan'),    'btn'=>'Lihat Detail',            'badge'=>''],
+            ['icon'=>$cms['kenapa_card5_icon']??'clipboard-list', 'judul'=>$cms['kenapa_card5_judul']??'150+ Titik Pemeriksaan','desc'=>$cms['kenapa_card5_desc']??'','type'=>'link','href'=>route('keunggulan.show','titik-inspeksi'),'btn'=>'Lihat Titik Pemeriksaan','badge'=>$cms['kenapa_card5_badge']??'Populer'],
         ];
-        $iconPaths=['monitor'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2h-2"/>','file-text'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>','shield-check'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>','eye'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>','clock'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>','credit-card'=>'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>'];
-        $defaultPath='<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/>';
+        $iconPaths = [
+            'monitor'        => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2h-2"/>',
+            'file-text'      => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>',
+            'shield-check'   => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>',
+            'eye'            => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>',
+            'clipboard-list' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7l2 2 4-4"/>',
+        ];
+        $defaultPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/>';
         @endphp
+
         {{-- Carousel --}}
         <div class="relative">
-            <div class="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none rounded-r-2xl"></div>
-            <div id="kenapa-track" class="flex gap-5 overflow-x-auto scroll-smooth pb-2" style="scrollbar-width:none;-ms-overflow-style:none;">
-                @foreach($kenapaCards as $card)
-                <div class="flex-none w-72 bg-white border border-gray-200 rounded-2xl p-6 flex flex-col hover:shadow-lg hover:border-primary-200 hover:-translate-y-0.5 transition-all duration-200 cursor-default">
-                    <div class="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center mb-5 flex-shrink-0">
-                        <svg class="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {{-- Fade kanan --}}
+            <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+            <div id="kenapa-track"
+                 class="flex gap-4 overflow-x-auto scroll-smooth pb-3"
+                 style="scrollbar-width:none;-ms-overflow-style:none;">
+
+                @foreach($kenapaCards as $idx => $card)
+                <div class="flex-none w-72 bg-white border border-gray-100 rounded-2xl p-6 flex flex-col
+                            shadow-sm hover:shadow-md hover:border-primary-200 hover:-translate-y-1
+                            transition-all duration-200 group" style="min-height:280px;">
+
+                    {{-- Nomor urut + Badge --}}
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-bold text-gray-300">
+                            {{ str_pad($idx + 1, 2, '0', STR_PAD_LEFT) }}
+                        </span>
+                        @if(!empty($card['badge']))
+                        <span class="bg-primary-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">
+                            {{ $card['badge'] }}
+                        </span>
+                        @endif
+                    </div>
+
+                    {{-- Icon --}}
+                    <div class="w-11 h-11 bg-primary-50 rounded-xl flex items-center justify-center mb-5 flex-shrink-0
+                                group-hover:bg-primary-100 transition-colors" style="min-width:2.75rem;min-height:2.75rem;">
+                        <svg class="w-5 h-5 text-primary-600" style="width:1.25rem;height:1.25rem;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             {!! $iconPaths[$card['icon']] ?? $defaultPath !!}
                         </svg>
                     </div>
+
+                    {{-- Teks --}}
                     <div class="flex-1">
-                        <h3 class="font-bold text-gray-900 text-base mb-2">{{ $card['judul'] }}</h3>
+                        <h3 class="font-bold text-gray-900 text-base mb-2 leading-snug">{{ $card['judul'] }}</h3>
                         <p class="text-sm text-gray-500 leading-relaxed">{{ $card['desc'] }}</p>
                     </div>
-                    <div class="mt-5">
-                        @if(!empty($card['pdf']))
-                            <a href="{{ Storage::url($card['pdf']) }}" target="_blank" rel="noopener noreferrer"
-                               class="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors">
-                                Lihat Contoh Laporan
+
+                    {{-- Tombol --}}
+                    <div class="mt-5 pt-4 border-t border-gray-100">
+                        @if($card['type'] === 'pdf')
+                            <a href="{{ $card['href'] }}" target="_blank" rel="noopener noreferrer"
+                               class="flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-800 transition-colors group/link">
+                                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                                {{ $card['btn'] }}
                             </a>
                         @else
-                            <a href="{{ route('layanan') }}"
-                               class="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors">
-                                Lihat Detail
+                            <a href="{{ $card['href'] }}"
+                               class="flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-800 transition-colors group/link">
+                                {{ $card['btn'] }}
+                                <svg class="w-4 h-4 flex-shrink-0 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
                             </a>
                         @endif
                     </div>
                 </div>
                 @endforeach
+
             </div>
         </div>
-        {{-- Dot indicators --}}
-        <div class="flex justify-center gap-2 mt-5" id="kenapa-dots">
+
+        {{-- Dots --}}
+        <div class="flex justify-center gap-2 mt-6" id="kenapa-dots">
             @foreach($kenapaCards as $i => $card)
-            <button class="kenapa-dot transition-all duration-200 rounded-full {{ $i===0 ? 'w-5 h-2 bg-primary-600' : 'w-2 h-2 bg-gray-300 hover:bg-gray-400' }}" data-index="{{ $i }}"></button>
+            <button class="kenapa-dot transition-all duration-200 rounded-full
+                           {{ $i === 0 ? 'w-5 h-2 bg-primary-600' : 'w-2 h-2 bg-gray-300 hover:bg-gray-400' }}"
+                    data-index="{{ $i }}"></button>
             @endforeach
         </div>
+
     </div>
 </section>
 
