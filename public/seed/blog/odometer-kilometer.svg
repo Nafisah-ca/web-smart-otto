@@ -27,7 +27,4 @@
   <rect x="330" y="290" width="140" height="40" rx="6" fill="#0f172a" stroke="#374151" stroke-width="2"/>
   <text x="400" y="317" font-family="monospace" font-size="20" font-weight="700" fill="#4ade80" text-anchor="middle">087,432</text>
   <text x="400" y="355" font-family="Arial,sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">km</text>
-  <!-- Label -->
-  <rect x="0" y="0" width="240" height="40" fill="#e11d48"/>
-  <text x="14" y="26" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" fill="white">ODOMETER &amp; KILOMETER</text>
 </svg>

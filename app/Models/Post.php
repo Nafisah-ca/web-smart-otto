@@ -50,16 +50,7 @@ class Post extends Model
     // ── Accessors ─────────────────────────────────────────────────
 
     /**
-     * Estimated reading time in minutes, based on word count.
-     */
-    public function getReadingTimeAttribute(): int
-    {
-        $wordCount = str_word_count(strip_tags($this->content));
-        return max(1, (int) ceil($wordCount / 200));
-    }
-
-    /**
-     * Short human-friendly published date in Indonesian.
+     * Short human-friendly published date in Indonesian (timezone Asia/Jakarta).
      */
     public function getFormattedDateAttribute(): string
     {
@@ -74,9 +65,11 @@ class Post extends Model
             10 => 'Oktober', 11 => 'November',  12 => 'Desember',
         ];
 
-        return $this->published_at->format('d') . ' '
-             . $bulan[(int) $this->published_at->format('n')] . ' '
-             . $this->published_at->format('Y');
+        $dt = $this->published_at->setTimezone('Asia/Jakarta');
+
+        return $dt->format('d') . ' '
+             . $bulan[(int) $dt->format('n')] . ' '
+             . $dt->format('Y');
     }
 
     // ── Helpers ───────────────────────────────────────────────────

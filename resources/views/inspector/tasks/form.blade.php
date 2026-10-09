@@ -9,7 +9,7 @@
 
     <div class="bg-primary-50 border border-primary-200 rounded-lg p-4 text-sm">
         <strong>{{ $booking->vehicle->brand }} {{ $booking->vehicle->model }}</strong> — {{ $booking->vehicle->plate_number }}
-        · {{ $booking->user->name }} · {{ $booking->package->name }}
+        · {{ $booking->user->name }} · {{ $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}
     </div>
 
     <form method="POST" action="{{ $existingResult ? route('inspector.tasks.update', $booking) : route('inspector.tasks.store', $booking) }}"
@@ -26,7 +26,10 @@
                 @foreach($items as $idx => $item)
                 @php
                     $existing = collect($existingResult?->checklist_json ?? [])->firstWhere('item_id', $item->id);
-                    $existingStatus = $existing['status'] ?? 'baik';
+                    $rawStatus = $existing['status'] ?? 'ok';
+                    // Fallback: map status lama (baik/cukup/buruk) ke status baru
+                    $legacyMap = \App\Models\InspectionChecklistItem::$legacyStatusMap;
+                    $existingStatus = $legacyMap[$rawStatus] ?? $rawStatus;
                     $existingNote = $existing['note'] ?? '';
                 @endphp
                 <div class="border border-gray-100 rounded-lg p-3">
@@ -35,16 +38,17 @@
                     <input type="hidden" name="checklist[{{ $item->id }}][category]" value="{{ $item->category }}">
                     <div class="flex items-start justify-between gap-4">
                         <p class="text-sm font-medium text-gray-700 flex-1">{{ $item->item_name }}</p>
-                        <div class="flex gap-2 flex-shrink-0">
-                            @foreach(['baik'=>'Baik','cukup'=>'Cukup','buruk'=>'Buruk'] as $v=>$l)
+                        <div class="flex gap-2 flex-shrink-0 flex-wrap justify-end">
+                            @foreach(\App\Models\InspectionChecklistItem::$statusOptions as $v => $l)
                             <label class="cursor-pointer">
                                 <input type="radio" name="checklist[{{ $item->id }}][status]" value="{{ $v }}"
                                        {{ $existingStatus === $v ? 'checked' : '' }}
                                        class="sr-only peer" required>
                                 <span class="px-2.5 py-1 text-xs rounded-full border peer-checked:font-bold transition-colors
-                                    @if($v==='baik') peer-checked:bg-green-100 peer-checked:border-green-500 peer-checked:text-green-700 border-gray-200 text-gray-500
-                                    @elseif($v==='cukup') peer-checked:bg-yellow-100 peer-checked:border-yellow-500 peer-checked:text-yellow-700 border-gray-200 text-gray-500
-                                    @else peer-checked:bg-red-100 peer-checked:border-red-500 peer-checked:text-red-700 border-gray-200 text-gray-500
+                                    @if($v==='ok') peer-checked:bg-green-100 peer-checked:border-green-500 peer-checked:text-green-700 border-gray-200 text-gray-500
+                                    @elseif($v==='perlu_diservis') peer-checked:bg-yellow-100 peer-checked:border-yellow-500 peer-checked:text-yellow-700 border-gray-200 text-gray-500
+                                    @elseif($v==='perlu_diganti') peer-checked:bg-red-100 peer-checked:border-red-500 peer-checked:text-red-700 border-gray-200 text-gray-500
+                                    @else peer-checked:bg-gray-100 peer-checked:border-gray-500 peer-checked:text-gray-700 border-gray-200 text-gray-500
                                     @endif">{{ $l }}</span>
                             </label>
                             @endforeach

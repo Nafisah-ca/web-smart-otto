@@ -29,12 +29,12 @@
                 <p class="font-medium">{{ $booking->vehicle->plate_number }}</p>
             </div>
             <div>
-                <p class="text-gray-500">Paket</p>
-                <p class="font-medium">{{ $booking->package->name }}</p>
+                <p class="text-gray-500">Layanan</p>
+                <p class="font-medium">{{ $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</p>
             </div>
             <div>
                 <p class="text-gray-500">Biaya Inspeksi</p>
-                <p class="font-medium">{{ $booking->package->formatted_price }}</p>
+                <p class="font-medium">{{ $booking->formatted_price }}</p>
             </div>
             <div>
                 <p class="text-gray-500">Tanggal & Jam</p>

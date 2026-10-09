@@ -36,8 +36,8 @@
                 'Kode Booking'  => $booking->booking_code,
                 'Tanggal'       => $booking->booking_date->isoFormat('D MMMM Y'),
                 'Jam'           => substr($booking->booking_time,0,5).' WIB',
-                'Paket'         => $booking->package->name,
-                'Biaya'         => $booking->package->formatted_price,
+                'Layanan'       => $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan',
+                'Biaya'         => $booking->formatted_price,
                 'Catatan'       => $booking->notes ?? '-',
             ] as $label => $value)
             <div class="flex justify-between text-sm border-b border-gray-50 pb-2">
@@ -63,6 +63,42 @@
             </div>
         </div>
     </div>
+
+    {{-- Konfirmasi Harga --}}
+    @if($booking->transaction?->payment_status === 'price_pending')
+    @php $cat = $booking->vehicleCategory; @endphp
+    <div class="card p-5 border-2 border-primary-200 bg-primary-50">
+        <h3 class="font-semibold text-primary-800 mb-1">💰 Konfirmasi Harga Inspeksi</h3>
+        <p class="text-sm text-primary-700 mb-4">
+            Customer belum bisa bayar sampai harga dikonfirmasi.
+            @if($cat)
+            Kisaran harga untuk <strong>{{ $cat->name }}</strong>:
+            <strong>{{ $cat->formatted_range }}</strong>
+            @endif
+        </p>
+        <form method="POST" action="{{ route('admin.bookings.confirm-price', $booking) }}" class="flex flex-wrap gap-3 items-end">
+            @csrf
+            <div>
+                <label class="form-label text-sm">Harga Final (Rp)</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">Rp</span>
+                    <input type="number" name="final_price"
+                           value="{{ old('final_price', $booking->final_price ?? $cat?->price_min ?? '') }}"
+                           min="{{ $cat?->price_min ?? 0 }}"
+                           max="{{ $cat?->price_max ?? 99999999 }}"
+                           step="1000"
+                           class="form-input pl-9 w-48 @error('final_price') border-red-400 @enderror"
+                           required>
+                </div>
+                @error('final_price')<p class="form-error text-xs mt-1">{{ $message }}</p>@enderror
+                @if($cat)
+                <p class="text-xs text-gray-500 mt-1">Min: Rp {{ number_format($cat->price_min,0,',','.') }} — Max: Rp {{ number_format($cat->price_max,0,',','.') }}</p>
+                @endif
+            </div>
+            <button class="btn-primary">✅ Konfirmasi Harga</button>
+        </form>
+    </div>
+    @endif
 
     {{-- Assign Inspektor --}}
     <div class="card p-5">

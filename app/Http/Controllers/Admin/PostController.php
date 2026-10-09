@@ -13,7 +13,7 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-        $query = Post::orderByDesc('updated_at');
+        $query = Post::orderByDesc('published_at');
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -41,6 +41,11 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $validated = $this->validatePost($request);
+
+        // Auto-fill published_at when status is published and date is empty
+        if ($validated['status'] === 'published' && empty($validated['published_at'])) {
+            $validated['published_at'] = now();
+        }
 
         // Remove file object — not a DB column
         unset($validated['thumbnail'], $validated['cta_image']);
@@ -72,6 +77,11 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         $validated = $this->validatePost($request, $post->id);
+
+        // Auto-fill published_at when status is published and date is empty
+        if ($validated['status'] === 'published' && empty($validated['published_at'])) {
+            $validated['published_at'] = now();
+        }
 
         // Remove file objects — not DB columns
         unset($validated['thumbnail'], $validated['cta_image']);

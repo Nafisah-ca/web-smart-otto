@@ -33,7 +33,7 @@
                     </div>
                     <div>
                         <p class="font-medium text-sm text-gray-800">{{ $b->user->name }}</p>
-                        <p class="text-xs text-gray-500">{{ $b->vehicle->brand }} {{ $b->vehicle->model }} · {{ $b->package->name }}</p>
+                        <p class="text-xs text-gray-500">{{ $b->vehicle->brand }} {{ $b->vehicle->model }} · {{ $b->package?->name ?? $b->vehicleCategory?->name ?? 'Inspeksi' }}</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">

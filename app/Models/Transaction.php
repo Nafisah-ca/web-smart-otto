@@ -27,19 +27,21 @@ class Transaction extends Model
     ];
 
     public static array $paymentStatusLabels = [
-        'unpaid'   => 'Belum Bayar',
-        'pending'  => 'Menunggu Verifikasi',
-        'partial'  => 'Bayar Sebagian',
-        'paid'     => 'Lunas',
-        'rejected' => 'Bukti Ditolak',
+        'price_pending' => 'Menunggu Konfirmasi Harga',
+        'unpaid'        => 'Belum Bayar',
+        'pending'       => 'Menunggu Verifikasi',
+        'partial'       => 'Bayar Sebagian',
+        'paid'          => 'Lunas',
+        'rejected'      => 'Bukti Ditolak',
     ];
 
     public static array $paymentStatusColors = [
-        'unpaid'   => 'red',
-        'pending'  => 'yellow',
-        'partial'  => 'blue',
-        'paid'     => 'green',
-        'rejected' => 'red',
+        'price_pending' => 'gray',
+        'unpaid'        => 'red',
+        'pending'       => 'yellow',
+        'partial'       => 'blue',
+        'paid'          => 'green',
+        'rejected'      => 'red',
     ];
 
     public function getPaymentStatusLabelAttribute(): string
@@ -122,7 +124,10 @@ class Transaction extends Model
     public function recalculate(): void
     {
         $subtotal = (float) $this->items()->sum('subtotal');
-        $tax      = round($subtotal * 0.11); // PPN 11%
+        // PPN 11% dibulatkan ke ATAS ke kelipatan 100 terdekat
+        // Contoh: 38.500 → 38.500 (pas), 41.250 → 41.300
+        $taxRaw   = $subtotal * 0.11;
+        $tax      = ceil($taxRaw / 100) * 100;
         $discount = (float) ($this->discount ?? 0);
         $total    = max(0, $subtotal + $tax - $discount);
 

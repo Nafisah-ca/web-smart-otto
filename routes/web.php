@@ -63,11 +63,14 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:customer'])->group(function () {
-    Route::get('/booking',           [BookingController::class, 'create'])->name('booking.create');
-    Route::post('/booking',          [BookingController::class, 'store'])->name('booking.store');
-    Route::get('/booking/success/{booking}', [BookingController::class, 'success'])->name('booking.success');
-    Route::get('/booking/slots',     [BookingController::class, 'getSlots'])->name('booking.slots');
+    Route::get('/booking',                        [BookingController::class, 'create'])->name('booking.create');
+    Route::post('/booking',                       [BookingController::class, 'store'])->name('booking.store');
+    Route::get('/booking/success/{booking}',      [BookingController::class, 'success'])->name('booking.success');
+    Route::get('/booking/slots',                  [BookingController::class, 'getSlots'])->name('booking.slots');
 });
+
+// Detect category: tidak perlu login (AJAX publik dari form booking)
+Route::get('/booking/detect-category', [BookingController::class, 'detectCategory'])->name('booking.detect-category');
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +117,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/bookings/{booking}/assign',  [AdminBooking::class, 'assign'])->name('bookings.assign');
     Route::post('/bookings/{booking}/status',  [AdminBooking::class, 'updateStatus'])->name('bookings.status');
     Route::post('/bookings/{booking}/cancel',  [AdminBooking::class, 'cancel'])->name('bookings.cancel');
+    Route::post('/bookings/{booking}/confirm-price', [AdminBooking::class, 'confirmPrice'])->name('bookings.confirm-price');
     Route::get('/bookings/create',             [AdminBooking::class, 'create'])->name('bookings.create');
     Route::post('/bookings',                   [AdminBooking::class, 'store'])->name('bookings.store');
 

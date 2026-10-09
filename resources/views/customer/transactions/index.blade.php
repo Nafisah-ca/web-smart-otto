@@ -69,8 +69,8 @@
                     <span class="text-xs text-gray-500 block font-mono">{{ $booking->vehicle->plate_number }}</span>
                 </div>
                 <div>
-                    <span class="text-xs text-gray-400 block">Paket Inspeksi</span>
-                    <span class="font-medium text-gray-800">{{ $booking->package->name }}</span>
+                    <span class="text-xs text-gray-400 block">Layanan</span>
+                    <span class="font-medium text-gray-800">{{ $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</span>
                     <span class="text-xs text-gray-500 block">{{ $trx->items->count() }} Rincian Item</span>
                 </div>
                 <div>
@@ -96,6 +96,8 @@
                     <span class="text-yellow-600 font-medium">⏳ Menunggu admin memverifikasi bukti pembayaran Anda.</span>
                     @elseif($trx->payment_status === 'paid')
                     <span class="text-green-600 font-medium">✓ Pembayaran lunas. Terima kasih!</span>
+                    @elseif($trx->payment_status === 'price_pending')
+                    <span class="text-gray-500 font-medium">⏳ Menunggu konfirmasi harga dari admin.</span>
                     @elseif($trx->payment_status === 'unpaid')
                     <span class="text-red-500 font-medium">⚡ Silakan selesaikan pembayaran untuk memproses inspeksi.</span>
                     @endif
@@ -109,6 +111,8 @@
                         Lihat Rincian & QRIS
                         @elseif($trx->payment_status === 'pending')
                         Lihat Status & Bukti
+                        @elseif($trx->payment_status === 'price_pending')
+                        Lihat Detail →
                         @else
                         Bayar Sekarang / QRIS →
                         @endif

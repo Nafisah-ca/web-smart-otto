@@ -27,7 +27,7 @@
             <p class="text-sm"><span class="text-gray-500">Customer:</span> {{ $booking->user->name }}</p>
             <p class="text-sm"><span class="text-gray-500">Telepon:</span> {{ $booking->user->phone }}</p>
             <p class="text-sm"><span class="text-gray-500">Tanggal:</span> {{ $booking->booking_date->isoFormat('D MMM Y') }} · {{ substr($booking->booking_time,0,5) }}</p>
-            <p class="text-sm"><span class="text-gray-500">Paket:</span> {{ $booking->package->name }}</p>
+            <p class="text-sm"><span class="text-gray-500">Layanan:</span> {{ $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</p>
             @if($booking->notes)
             <p class="text-sm bg-amber-50 border border-amber-100 rounded p-2"><span class="text-gray-500">Catatan:</span> {{ $booking->notes }}</p>
             @endif

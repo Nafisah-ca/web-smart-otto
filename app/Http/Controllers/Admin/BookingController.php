@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Models\VehicleCategory;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -65,6 +66,50 @@ class BookingController extends Controller
         return back()->with('success', 'Inspektor berhasil di-assign.');
     }
 
+    /**
+     * Admin konfirmasi harga final — ubah payment_status dari price_pending → unpaid.
+     * Customer baru bisa bayar setelah ini.
+     */
+    public function confirmPrice(Request $request, Booking $booking)
+    {
+        $category = $booking->vehicleCategory;
+
+        $request->validate([
+            'final_price' => [
+                'required', 'numeric', 'min:0',
+                // Validasi dalam kisaran kategori jika ada
+                $category ? "max:{$category->price_max}" : 'max:99999999',
+            ],
+        ], [
+            'final_price.required' => 'Harga final wajib diisi.',
+            'final_price.min'      => 'Harga tidak boleh negatif.',
+            'final_price.max'      => 'Harga melebihi batas maksimum kategori (Rp ' . number_format($category?->price_max ?? 0, 0, ',', '.') . ').',
+        ]);
+
+        $finalPrice = (float) $request->final_price;
+
+        // Update final_price di booking
+        $booking->update(['final_price' => $finalPrice]);
+
+        // Update TransactionItem harga inspeksi
+        $trx = $booking->transaction;
+        abort_if(! $trx, 422, 'Transaksi tidak ditemukan.');
+
+        // Update item biaya inspeksi
+        $trx->items()->where('category', 'Inspeksi')->update([
+            'price'    => $finalPrice,
+            'subtotal' => $finalPrice,
+        ]);
+
+        // Ubah status jadi unpaid (customer sudah bisa bayar)
+        $trx->update(['payment_status' => 'unpaid']);
+
+        // Recalculate total + PPN
+        $trx->recalculate();
+
+        return back()->with('success', 'Harga berhasil dikonfirmasi. Customer sekarang dapat melakukan pembayaran.');
+    }
+
     public function updateStatus(Request $request, Booking $booking)
     {
         $request->validate([
@@ -88,17 +133,18 @@ class BookingController extends Controller
 
     public function create()
     {
-        $packages   = InspectionPackage::active()->get();
+        $categories = VehicleCategory::active()->get();
         $customers  = User::customers()->orderBy('name')->get();
         $inspectors = User::inspectors()->orderBy('name')->get();
-        return view('admin.bookings.create', compact('packages', 'customers', 'inspectors'));
+        return view('admin.bookings.create', compact('categories', 'customers', 'inspectors'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'user_id'      => 'required|exists:user,id',
-            'package_id'   => 'required|exists:inspection_package,id',
+            'category_id'  => 'nullable|exists:vehicle_category,id',
+            'final_price'  => 'nullable|numeric|min:0',
             'booking_date' => 'required|date',
             'booking_time' => 'required|string',
             'inspector_id' => 'nullable|exists:user,id',
@@ -124,6 +170,7 @@ class BookingController extends Controller
                 'plate_number' => strtoupper($request->plate_number),
                 'year'         => $request->year,
                 'type'         => $request->type,
+                'color'        => $request->color,
             ]);
         }
 
@@ -131,7 +178,9 @@ class BookingController extends Controller
             'booking_code' => Booking::generateCode(),
             'user_id'      => $request->user_id,
             'vehicle_id'   => $vehicle->id,
-            'package_id'   => $request->package_id,
+            'package_id'   => null,
+            'category_id'  => $request->category_id ?: null,
+            'final_price'  => $request->final_price ?: null,
             'inspector_id' => $request->inspector_id,
             'booking_date' => $request->booking_date,
             'booking_time' => $request->booking_time . ':00',
@@ -140,8 +189,11 @@ class BookingController extends Controller
             'confirmed_at' => now(),
         ]);
 
-        // Otomatis buat transaksi jika belum ada
-        $pkg = $booking->package;
+        // Buat transaksi — harga dari final_price (atau 0 jika belum ditentukan)
+        $price       = (float) ($request->final_price ?? 0);
+        $itemName    = 'Biaya Inspeksi'
+                     . ($booking->vehicleCategory ? ' - ' . $booking->vehicleCategory->name : '');
+
         $transaction = Transaction::create([
             'transaction_code' => Transaction::generateCode(),
             'booking_id'       => $booking->id,
@@ -155,12 +207,12 @@ class BookingController extends Controller
         TransactionItem::create([
             'transaction_id' => $transaction->id,
             'tariff_id'      => null,
-            'item_name'      => 'Biaya Inspeksi - ' . $pkg->name,
+            'item_name'      => $itemName,
             'category'       => 'Inspeksi',
-            'price'          => $pkg->price,
+            'price'          => $price,
             'quantity'       => 1,
-            'unit'           => 'paket',
-            'subtotal'       => $pkg->price,
+            'unit'           => 'unit',
+            'subtotal'       => $price,
         ]);
 
         $transaction->recalculate();

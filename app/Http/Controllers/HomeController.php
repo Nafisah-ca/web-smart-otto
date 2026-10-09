@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CmsContent;
 use App\Models\InspectionPackage;
+use App\Models\VehicleCategory;
 use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
@@ -74,8 +75,8 @@ class HomeController extends Controller
 
     public function layanan()
     {
-        $packages = InspectionPackage::active()->with('checklistItems')->get();
-        return view('layanan', compact('packages'));
+        $vehicleCategories = VehicleCategory::active()->with('modelKeywords')->get();
+        return view('layanan', compact('vehicleCategories'));
     }
 
     public function tentang()

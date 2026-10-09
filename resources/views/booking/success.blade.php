@@ -24,8 +24,8 @@
             <span class="font-medium">{{ $booking->vehicle->plate_number }}</span>
         </div>
         <div class="flex justify-between text-sm">
-            <span class="text-gray-500">Paket</span>
-            <span class="font-medium">{{ $booking->package->name }}</span>
+            <span class="text-gray-500">Paket / Kategori</span>
+            <span class="font-medium">{{ $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</span>
         </div>
         <div class="flex justify-between text-sm">
             <span class="text-gray-500">Tanggal & Jam</span>

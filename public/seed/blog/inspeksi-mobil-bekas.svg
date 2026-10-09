@@ -35,7 +35,4 @@
   <circle cx="340" cy="80" r="2" fill="white" opacity=".4"/>
   <circle cx="700" cy="50" r="2.5" fill="white" opacity=".5"/>
   <circle cx="750" cy="100" r="1.5" fill="white" opacity=".6"/>
-  <!-- Label strip -->
-  <rect x="0" y="0" width="220" height="40" fill="#e11d48"/>
-  <text x="14" y="26" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" fill="white">INSPEKSI MOBIL BEKAS</text>
 </svg>

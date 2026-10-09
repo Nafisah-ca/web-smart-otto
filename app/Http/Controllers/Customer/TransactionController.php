@@ -46,16 +46,22 @@ class TransactionController extends Controller
                 'payment_status'   => 'unpaid',
             ]);
 
-            $pkg = $booking->package;
+            // Harga dari final_price (baru) atau package->price (lama)
+            $price    = (float) $booking->effective_price;
+            $itemName = 'Biaya Inspeksi'
+                      . ($booking->vehicleCategory
+                            ? ' - ' . $booking->vehicleCategory->name
+                            : ($booking->package ? ' - ' . $booking->package->name : ''));
+
             TransactionItem::create([
                 'transaction_id' => $transaction->id,
                 'tariff_id'      => null,
-                'item_name'      => 'Biaya Inspeksi - ' . $pkg->name,
+                'item_name'      => $itemName,
                 'category'       => 'Inspeksi',
-                'price'          => $pkg->price,
+                'price'          => $price,
                 'quantity'       => 1,
-                'unit'           => 'paket',
-                'subtotal'       => $pkg->price,
+                'unit'           => 'unit',
+                'subtotal'       => $price,
             ]);
 
             $transaction->recalculate();

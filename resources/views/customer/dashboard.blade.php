@@ -45,13 +45,13 @@
                             @endif
                         </div>
                         <p class="text-sm font-medium text-gray-800">{{ $booking->vehicle->brand }} {{ $booking->vehicle->model }} — {{ $booking->vehicle->plate_number }}</p>
-                        <p class="text-xs text-gray-500 mt-0.5">{{ $booking->package->name }} · {{ $booking->booking_date->isoFormat('D MMM Y') }} · {{ substr($booking->booking_time, 0, 5) }} WIB</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }} · {{ $booking->booking_date->isoFormat('D MMM Y') }} · {{ substr($booking->booking_time, 0, 5) }} WIB</p>
                         @if($booking->inspector)
                         <p class="text-xs text-gray-400 mt-0.5">Inspektor: {{ $booking->inspector->name }}</p>
                         @endif
                     </div>
                     <div class="flex items-center gap-2 flex-shrink-0">
-                        @if($booking->transaction && $booking->transaction->payment_status !== 'paid')
+                        @if($booking->transaction && !in_array($booking->transaction->payment_status, ['paid', 'price_pending']))
                         <a href="{{ route('customer.transactions.show', $booking) }}" class="btn-primary btn-sm text-xs bg-red-600 hover:bg-red-700">
                             ⚡ Bayar QRIS
                         </a>
@@ -109,7 +109,7 @@
                     <tr>
                         <td class="px-4 py-3 text-sm">
                             <p class="font-medium text-gray-800">{{ $b->vehicle->brand }} {{ $b->vehicle->model }}</p>
-                            <p class="text-xs text-gray-500">{{ $b->package->name }} · {{ $b->booking_date->isoFormat('D MMM Y') }}</p>
+                            <p class="text-xs text-gray-500">{{ $b->package?->name ?? $b->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }} · {{ $b->booking_date->isoFormat('D MMM Y') }}</p>
                         </td>
                         <td class="px-4 py-3">
                             <span class="badge-green">Selesai</span>

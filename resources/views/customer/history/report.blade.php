@@ -81,22 +81,40 @@
 
     {{-- Checklist --}}
     @if($result->checklist_json)
+    @php
+        $legacyMap = \App\Models\InspectionChecklistItem::$legacyStatusMap;
+        $statusLabels = [
+            'ok'             => 'OK',
+            'perlu_diservis' => 'Perlu Diservis',
+            'perlu_diganti'  => 'Perlu Diganti',
+            'tidak_tersedia' => 'Tidak Tersedia',
+        ];
+        $statusBadge = [
+            'ok'             => 'badge-green',
+            'perlu_diservis' => 'badge-yellow',
+            'perlu_diganti'  => 'badge-red',
+            'tidak_tersedia' => 'badge-gray',
+        ];
+        $groups = collect($result->checklist_json)->groupBy(fn($item) => $item['category'] ?? 'Umum');
+    @endphp
     <div class="card p-5">
         <h3 class="font-semibold text-gray-800 mb-3">Detail Checklist</h3>
-        @php $groups = collect($result->checklist_json)->groupBy(fn($item) => $item['category'] ?? 'Umum'); @endphp
         <div class="space-y-4">
             @foreach($groups as $category => $items)
             <div>
                 <h4 class="text-sm font-semibold text-gray-600 mb-2 uppercase tracking-wide">{{ $category }}</h4>
                 <div class="space-y-1">
                     @foreach($items as $item)
+                    @php
+                        $raw    = $item['status'] ?? 'ok';
+                        $status = $legacyMap[$raw] ?? $raw;   // fallback data lama
+                        $label  = $statusLabels[$status] ?? ucfirst($status);
+                        $badge  = $statusBadge[$status]  ?? 'badge-gray';
+                    @endphp
                     <div class="flex items-center justify-between text-sm py-1.5 border-b border-gray-50">
                         <span class="text-gray-700">{{ $item['item'] ?? $item['item_name'] ?? '-' }}</span>
-                        <div class="flex items-center gap-2">
-                            @php $status = $item['status'] ?? 'baik'; @endphp
-                            <span class="@if($status==='baik') badge-green @elseif($status==='buruk') badge-red @else badge-yellow @endif">
-                                {{ ucfirst($status) }}
-                            </span>
+                        <div class="flex items-center gap-2 flex-shrink-0 ml-2">
+                            <span class="{{ $badge }}">{{ $label }}</span>
                             @if(!empty($item['note']))
                             <span class="text-xs text-gray-400">{{ $item['note'] }}</span>
                             @endif

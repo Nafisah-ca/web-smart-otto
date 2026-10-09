@@ -26,7 +26,7 @@
                     <span class="badge-{{ $booking->status_color }}">{{ $booking->status_label }}</span>
                 </div>
                 <p class="font-semibold text-gray-800">{{ $booking->vehicle->brand }} {{ $booking->vehicle->model }}</p>
-                <p class="text-sm text-gray-500">{{ $booking->vehicle->plate_number }} · {{ $booking->package->name }}</p>
+                <p class="text-sm text-gray-500">{{ $booking->vehicle->plate_number }} · {{ $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</p>
                 <p class="text-xs text-gray-400 mt-1">{{ $booking->booking_date->isoFormat('dddd, D MMMM Y') }} pukul {{ substr($booking->booking_time,0,5) }} WIB</p>
             </div>
             <div class="flex flex-col gap-2 flex-shrink-0">

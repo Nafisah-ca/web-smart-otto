@@ -8,7 +8,7 @@
   <rect x="500" y="150" width="70" height="250" rx="6" fill="#e11d48"/>
   <rect x="600" y="260" width="70" height="140" rx="6" fill="#475569"/>
   <!-- Glow on tallest bar -->
-  <rect x="500" y="150" width="70" height="250" rx="6" fill="#e11d48" opacity=".3" filter="url(#glow)"/>
+  <rect x="500" y="150" width="70" height="250" rx="6" fill="#e11d48" opacity=".25"/>
   <!-- Trend line -->
   <polyline points="135,310 235,256 335,196 435,226 535,166 635,276"
             fill="none" stroke="#fbbf24" stroke-width="3" stroke-linejoin="round"/>
@@ -27,7 +27,4 @@
   <line x1="85" y1="300" x2="715" y2="300" stroke="#1e293b" stroke-width="1" stroke-dasharray="6,4"/>
   <line x1="85" y1="200" x2="715" y2="200" stroke="#1e293b" stroke-width="1" stroke-dasharray="6,4"/>
   <line x1="85" y1="140" x2="715" y2="140" stroke="#1e293b" stroke-width="1" stroke-dasharray="6,4"/>
-  <!-- Label -->
-  <rect x="0" y="0" width="200" height="40" fill="#e11d48"/>
-  <text x="14" y="26" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" fill="white">HARGA MOBIL BEKAS</text>
 </svg>

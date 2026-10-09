@@ -12,14 +12,16 @@ class Booking extends Model
     protected $table = 'booking';
 
     protected $fillable = [
-        'booking_code', 'user_id', 'vehicle_id', 'package_id', 'inspector_id',
-        'booking_date', 'booking_time', 'status', 'notes',
-        'cancellation_reason', 'confirmed_at',
+        'booking_code', 'user_id', 'vehicle_id', 'package_id',
+        'category_id', 'final_price',
+        'inspector_id', 'booking_date', 'booking_time', 'status',
+        'notes', 'cancellation_reason', 'confirmed_at',
     ];
 
     protected $casts = [
         'booking_date'  => 'date',
         'confirmed_at'  => 'datetime',
+        'final_price'   => 'decimal:2',
     ];
 
     // Status labels
@@ -65,6 +67,26 @@ class Booking extends Model
     public function package()
     {
         return $this->belongsTo(InspectionPackage::class, 'package_id');
+    }
+
+    public function vehicleCategory()
+    {
+        return $this->belongsTo(VehicleCategory::class, 'category_id');
+    }
+
+    /** Harga final yang disimpan, atau fallback ke harga paket lama jika ada. */
+    public function getEffectivePriceAttribute(): float
+    {
+        if (! is_null($this->final_price)) {
+            return (float) $this->final_price;
+        }
+        return (float) ($this->package?->price ?? 0);
+    }
+
+    /** Format harga efektif sebagai string. */
+    public function getFormattedPriceAttribute(): string
+    {
+        return 'Rp ' . number_format($this->effective_price, 0, ',', '.');
     }
 
     public function inspector()

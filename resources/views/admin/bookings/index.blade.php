@@ -16,7 +16,7 @@
             <option value="{{ $k }}" {{ request('status')===$k?'selected':'' }}>{{ $v }}</option>
             @endforeach
         </select>
-        <input type="date" name="date" value="{{ request('date') }}" class="form-input text-sm">
+        <input typ e="date" name="date" value="{{ request('date') }}" class="form-input text-sm">
         <button type="submit" class="btn-primary btn-sm">Filter</button>
         <a href="{{ route('admin.bookings.index') }}" class="btn-secondary btn-sm">Reset</a>
     </form>
@@ -25,7 +25,7 @@
         <table class="w-full table-auto">
             <thead>
                 <tr>
-                    <th>Kode</th><th>Customer</th><th>Kendaraan</th><th>Paket</th>
+                    <th>Kode</th><th>Customer</th><th>Kendaraan</th><th>Layanan</th>
                     <th>Tanggal</th><th>Inspektor</th><th>Status</th><th>Aksi</th>
                 </tr>
             </thead>
@@ -38,9 +38,9 @@
                         <p class="text-xs text-gray-400">{{ $b->user->phone }}</p>
                     </td>
                     <td class="text-sm">{{ $b->vehicle->brand }} {{ $b->vehicle->model }}<br><span class="text-xs text-gray-400">{{ $b->vehicle->plate_number }}</span></td>
-                    <td class="text-sm">{{ $b->package->name }}</td>
+                    <td class="text-sm">{{ $b->package?->name ?? $b->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</td>
                     <td class="text-sm">{{ $b->booking_date->format('d M Y') }}<br><span class="text-xs text-gray-400">{{ substr($b->booking_time,0,5) }}</span></td>
-                    <td class="text-sm">{{ $b->inspector?->name ?? '<span class="text-gray-400">-</span>' }}</td>
+                    <td class="text-sm">{{ $b->inspector?->name ?? '-' }}</td>
                     <td><span class="badge-{{ $b->status_color }}">{{ $b->status_label }}</span></td>
                     <td><a href="{{ route('admin.bookings.show', $b) }}" class="btn-secondary btn-sm text-xs">Detail</a></td>
                 </tr>

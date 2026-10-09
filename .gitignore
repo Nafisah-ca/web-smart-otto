@@ -19,6 +19,5 @@ yarn-error.log
 /.idea
 /.vscode
 
-# Local debug files
-check.txt
-seed_out.txt
+# Local debug / temp files at project root
+/*.txt

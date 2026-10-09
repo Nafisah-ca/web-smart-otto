@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             InspectionPackageSeeder::class,
             InspectionChecklistItemSeeder::class,
+            VehicleCategorySeeder::class,
             VehicleSeeder::class,
             TariffSeeder::class,
             BookingSeeder::class,

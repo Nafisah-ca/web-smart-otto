@@ -31,7 +31,4 @@
   <circle cx="115" cy="195" r="14" fill="none" stroke="#475569" stroke-width="8"/>
   <line x1="620" y1="200" x2="680" y2="260" stroke="#475569" stroke-width="8" stroke-linecap="round"/>
   <circle cx="685" cy="265" r="14" fill="none" stroke="#475569" stroke-width="8"/>
-  <!-- Label -->
-  <rect x="0" y="0" width="200" height="40" fill="#e11d48"/>
-  <text x="14" y="26" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" fill="white">CEK MESIN KENDARAAN</text>
 </svg>

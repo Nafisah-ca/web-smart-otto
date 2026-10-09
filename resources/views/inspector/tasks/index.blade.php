@@ -24,7 +24,7 @@
                     <span class="badge-{{ $b->status_color }}">{{ $b->status_label }}</span>
                 </div>
                 <p class="font-medium text-gray-800">{{ $b->user->name }}</p>
-                <p class="text-sm text-gray-500">{{ $b->vehicle->brand }} {{ $b->vehicle->model }} · {{ $b->package->name }}</p>
+                <p class="text-sm text-gray-500">{{ $b->vehicle->brand }} {{ $b->vehicle->model }} · {{ $b->package?->name ?? $b->vehicleCategory?->name ?? 'Inspeksi' }}</p>
                 <p class="text-xs text-gray-400">{{ $b->booking_date->isoFormat('D MMM Y') }} · {{ substr($b->booking_time,0,5) }}</p>
             </div>
             <div class="flex flex-col gap-1.5">

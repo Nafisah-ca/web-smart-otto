@@ -160,29 +160,29 @@ app/
     BlogController.php              # Public: index & show
     Admin/PostController.php        # CMS: CRUD artikel
   Models/
-    Post.php                        # Model dengan scope published, reading_time
+    Post.php                        # Model dengan scope published, formatted_date (Asia/Jakarta)
 
 database/
   migrations/
     2026_10_01_000011_create_posts_table.php
   seeders/
-    PostSeeder.php                  # 6 artikel contoh (idempotent)
+    PostSeeder.php                  # 6 artikel contoh (idempotent, updateOrCreate by slug)
     DatabaseSeeder.php              # PostSeeder sudah terdaftar
 
 public/
-  seed/blog/                        # Gambar seed (ter-commit di repo)
+  seed/blog/                        # Gambar seed SVG (ter-commit di repo, bersih tanpa label)
     inspeksi-mobil-bekas.svg
     mesin-mobil-bekas.svg
     dokumen-bpkb-stnk.svg
     harga-mobil-bekas.svg
     tips-beli-mobil-bekas.svg
     odometer-kilometer.svg
-  uploads/                          # Upload runtime (di-.gitignore)
+  uploads/                          # Upload runtime (di-.gitignore, TIDAK ikut commit)
 
 resources/views/
   blog/
-    index.blade.php                 # Halaman daftar artikel
-    show.blade.php                  # Halaman detail + TOC
+    index.blade.php                 # Daftar artikel: bg abu, card putih shadow, badge di body card
+    show.blade.php                  # Detail: layout 2-kolom terpusat, TOC sticky, mobile collapsible
   admin/posts/
     index.blade.php                 # Tabel artikel + delete modal
     create.blade.php
@@ -195,9 +195,25 @@ resources/views/
 ## Git & Kolaborasi Tim
 
 - **Jangan commit** file `.env`, database lokal, atau folder `public/uploads/`
-- File gambar seed di `public/seed/blog/` **sudah ter-commit** dan akan tersedia setelah `git pull`
-- Setelah pull yang mengandung migration baru, jalankan: `php artisan migrate`
-- Setelah pull yang mengandung seeder baru, jalankan: `php artisan db:seed` (aman diulang)
+- File gambar seed di `public/seed/blog/` **sudah ter-commit** — tersedia otomatis setelah `git pull`, tidak perlu langkah ekstra
+- `thumbnail_url` di seeder mengarah ke `seed/blog/*.svg` (bukan `uploads/`), sehingga gambar selalu tampil tanpa storage:link
+- Setelah pull yang mengandung migration baru: `php artisan migrate`
+- Setelah pull yang mengandung seeder baru: `php artisan db:seed` (aman diulang, tidak duplikat)
+
+### Urutan setup lengkap untuk anggota tim baru
+
+```bash
+git clone <repo-url> web-smart-otto
+cd web-smart-otto
+composer install
+cp .env.example .env          # lalu edit DB_DATABASE, DB_USERNAME, DB_PASSWORD
+php artisan key:generate
+npm install && npm run build
+# buat database kosong di MySQL, lalu:
+php artisan migrate
+php artisan db:seed
+php artisan storage:link
+```
 
 ---
 
@@ -209,8 +225,12 @@ Pastikan route cache dibersihkan: `php artisan route:clear`
 **Asset CSS/JS tidak ter-load?**
 Jalankan ulang: `npm run build`
 
-**Gambar thumbnail tidak muncul?**
-Pastikan `php artisan storage:link` sudah dijalankan dan folder `public/uploads/blog/` dapat ditulis.
+**Gambar thumbnail artikel tidak muncul?**
+- Untuk artikel seed: tidak butuh storage:link — gambar ada di `public/seed/blog/` yang sudah ter-commit.
+- Untuk artikel yang diupload admin: pastikan `php artisan storage:link` sudah dijalankan dan `public/uploads/blog/` bisa ditulis.
 
 **Seeder error "Table not found"?**
 Jalankan migration terlebih dahulu: `php artisan migrate`
+
+**TOC artikel tidak muncul?**
+TOC hanya ditampilkan jika artikel memiliki minimal 2 heading (H2/H3) di dalam konten.

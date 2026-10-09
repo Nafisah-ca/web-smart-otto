@@ -49,7 +49,4 @@
   <rect x="658" y="230" width="30" height="6" rx="3" fill="#e2e8f0"/>
   <rect x="658" y="242" width="24" height="6" rx="3" fill="#e2e8f0"/>
   <rect x="658" y="254" width="28" height="6" rx="3" fill="#e2e8f0"/>
-  <!-- Label -->
-  <rect x="0" y="0" width="200" height="40" fill="#e11d48"/>
-  <text x="14" y="26" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" fill="white">TIPS BELI MOBIL BEKAS</text>
 </svg>

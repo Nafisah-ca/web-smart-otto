@@ -21,7 +21,24 @@
     </div>
 
     {{-- Status Alert Banner --}}
-    @if($transaction->payment_status === 'paid')
+    @if($transaction->payment_status === 'price_pending')
+    <div class="bg-gray-50 border border-gray-300 rounded-xl p-5 flex items-start gap-4">
+        <div class="w-10 h-10 bg-gray-400 text-white rounded-full flex items-center justify-center flex-shrink-0 text-xl">
+            ⏳
+        </div>
+        <div class="flex-1">
+            <h3 class="font-bold text-base text-gray-700">Menunggu Konfirmasi Harga</h3>
+            <p class="text-sm text-gray-600 mt-1">
+                Admin sedang meninjau data kendaraan Anda dan akan segera mengonfirmasi harga final.
+                @if($booking->vehicleCategory)
+                Estimasi harga untuk <strong>{{ $booking->vehicleCategory->name }}</strong>:
+                <strong class="text-primary-600">{{ $booking->vehicleCategory->formatted_range }}</strong>
+                @endif
+            </p>
+            <p class="text-xs text-gray-400 mt-2">Anda akan dapat melakukan pembayaran setelah harga dikonfirmasi oleh admin.</p>
+        </div>
+    </div>
+    @elseif($transaction->payment_status === 'paid')
     <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-5 text-emerald-900 flex items-start gap-4">
         <div class="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-xl font-bold">
             ✓
@@ -96,8 +113,8 @@
                         <span class="font-medium text-gray-800">{{ $booking->vehicle->brand }} {{ $booking->vehicle->model }} ({{ $booking->vehicle->plate_number }})</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-gray-400">Paket:</span>
-                        <span class="font-medium text-gray-800">{{ $booking->package->name }}</span>
+                        <span class="text-gray-400">Layanan:</span>
+                        <span class="font-medium text-gray-800">{{ $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</span>
                     </div>
                 </div>
 
@@ -292,7 +309,7 @@
             </div>
 
             {{-- Form Upload Bukti Pembayaran / Konfirmasi --}}
-            @if($transaction->payment_status !== 'paid')
+            @if(!in_array($transaction->payment_status, ['paid', 'price_pending']))
             <div class="card p-5 space-y-4">
                 <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
                     <div class="w-7 h-7 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold text-xs">

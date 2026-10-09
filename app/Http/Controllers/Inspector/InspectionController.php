@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Inspector;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\InspectionChecklistItem;
 use App\Models\InspectionResult;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -36,14 +37,18 @@ class InspectionController extends Controller
     public function form(Booking $booking)
     {
         $this->authorizeInspector($booking);
-        $booking->load(['vehicle','package.checklistItems','inspectionResult']);
+        $booking->load(['vehicle', 'inspectionResult']);
 
         // Tandai sebagai on_progress jika masih confirmed/waiting
-        if (in_array($booking->status, ['confirmed','waiting'])) {
+        if (in_array($booking->status, ['confirmed', 'waiting'])) {
             $booking->update(['status' => 'on_progress']);
         }
 
-        $checklistItems = $booking->package->checklistItems()->orderBy('category')->orderBy('sort_order')->get();
+        // Load 81 poin aktif langsung — tidak lagi via relasi paket
+        $checklistItems = InspectionChecklistItem::active()
+            ->orderBy('sort_order')
+            ->get();
+
         $existingResult = $booking->inspectionResult;
 
         return view('inspector.tasks.form', compact('booking', 'checklistItems', 'existingResult'));
@@ -53,8 +58,11 @@ class InspectionController extends Controller
     {
         $this->authorizeInspector($booking);
 
+        $validStatuses = implode(',', array_keys(\App\Models\InspectionChecklistItem::$statusOptions));
+
         $request->validate([
             'checklist'         => 'required|array',
+            'checklist.*.status'=> 'required|in:' . $validStatuses,
             'condition_summary' => 'required|in:baik,cukup,perlu_perhatian,kritis',
             'recommendation'    => 'nullable|string',
             'inspector_notes'   => 'nullable|string',
@@ -79,8 +87,11 @@ class InspectionController extends Controller
     {
         $this->authorizeInspector($booking);
 
+        $validStatuses = implode(',', array_keys(\App\Models\InspectionChecklistItem::$statusOptions));
+
         $request->validate([
             'checklist'         => 'required|array',
+            'checklist.*.status'=> 'required|in:' . $validStatuses,
             'condition_summary' => 'required|in:baik,cukup,perlu_perhatian,kritis',
             'recommendation'    => 'nullable|string',
             'inspector_notes'   => 'nullable|string',

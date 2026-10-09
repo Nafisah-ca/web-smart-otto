@@ -110,7 +110,7 @@
                                 {{ $booking->booking_code }}
                             </a>
                             <span class="text-xs text-gray-600 block">{{ $booking->vehicle->brand }} {{ $booking->vehicle->model }} ({{ $booking->vehicle->plate_number }})</span>
-                            <span class="text-xs text-gray-400 block">{{ $booking->package->name }}</span>
+                            <span class="text-xs text-gray-400 block">{{ $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</span>
                         </td>
                         <td class="p-3.5">
                             <span class="font-bold text-gray-900 block text-sm">{{ $trx->formatted_total }}</span>

@@ -23,12 +23,12 @@
         <h3 class="font-semibold text-gray-800 mb-3">Riwayat Booking</h3>
         <div class="card overflow-hidden">
             <table class="w-full table-auto">
-                <thead><tr><th>Kode</th><th>Paket</th><th>Tanggal</th><th>Status</th></tr></thead>
+                <thead><tr><th>Kode</th><th>Layanan</th><th>Tanggal</th><th>Status</th></tr></thead>
                 <tbody>
                     @foreach($user->bookings as $b)
                     <tr>
                         <td class="font-mono text-xs text-primary-600">{{ $b->booking_code }}</td>
-                        <td class="text-sm">{{ $b->package->name }}</td>
+                        <td class="text-sm">{{ $b->package?->name ?? $b->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</td>
                         <td class="text-sm">{{ $b->booking_date->format('d/m/Y') }}</td>
                         <td><span class="badge-{{ $b->status_color }}">{{ $b->status_label }}</span></td>
                     </tr>

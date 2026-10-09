@@ -38,8 +38,8 @@
             <span class="text-xs text-gray-500 font-mono block">{{ $booking->vehicle->plate_number }}</span>
         </div>
         <div>
-            <span class="text-xs text-gray-400 block font-medium">Paket Inspeksi</span>
-            <span class="font-medium text-gray-900">{{ $booking->package->name }}</span>
+            <span class="text-xs text-gray-400 block font-medium">Layanan</span>
+            <span class="font-medium text-gray-900">{{ $booking->package?->name ?? $booking->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</span>
             <span class="text-xs text-gray-500 block">{{ $booking->booking_date->isoFormat('D MMM Y') }}</span>
         </div>
         <div>

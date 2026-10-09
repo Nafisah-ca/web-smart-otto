@@ -191,10 +191,13 @@
                                maxlength="100" class="form-input">
                     </div>
                     <div>
-                        <label for="cta_button_url" class="form-label">URL Tombol</label>
+                        <label for="cta_button_url" class="form-label">
+                            URL Tombol
+                            <span class="ml-1 text-xs text-gray-400 font-normal">(opsional — kosongkan untuk otomatis ke halaman Booking)</span>
+                        </label>
                         <input id="cta_button_url" name="cta_button_url" type="text"
                                value="{{ old('cta_button_url', $post->cta_button_url ?? '') }}"
-                               placeholder="{{ route('booking.create') }}"
+                               placeholder="/booking (default)"
                                maxlength="255" class="form-input">
                     </div>
                 </div>

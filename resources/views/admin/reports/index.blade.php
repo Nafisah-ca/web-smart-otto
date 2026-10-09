@@ -40,7 +40,7 @@
                     <td class="text-sm">{{ $b->booking_date->format('d/m') }}</td>
                     <td class="text-sm">{{ $b->user->name }}</td>
                     <td class="text-sm">{{ $b->vehicle->plate_number }}</td>
-                    <td class="text-sm">{{ $b->package->name }}</td>
+                    <td class="text-sm">{{ $b->package?->name ?? $b->vehicleCategory?->name ?? 'Inspeksi Kendaraan' }}</td>
                     <td class="text-sm">{{ $b->inspector?->name ?? '-' }}</td>
                     <td><span class="badge-{{ $b->status_color }}">{{ $b->status_label }}</span></td>
                     <td class="text-sm font-semibold">{{ $b->transaction?->formatted_total ?? '-' }}</td>

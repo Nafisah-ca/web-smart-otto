@@ -4,58 +4,79 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\InspectionChecklistItem;
-use App\Models\InspectionPackage;
 use Illuminate\Http\Request;
 
 class ChecklistItemController extends Controller
 {
     public function index(Request $request)
     {
-        $query = InspectionChecklistItem::with('package')->orderBy('package_id')->orderBy('sort_order');
-        if ($request->package_id) {
-            $query->where('package_id', $request->package_id);
+        $query = InspectionChecklistItem::orderBy('sort_order');
+
+        if ($request->category) {
+            $query->where('category', $request->category);
         }
-        $items    = $query->paginate(20)->withQueryString();
-        $packages = InspectionPackage::active()->get();
-        return view('admin.checklist.index', compact('items', 'packages'));
+
+        $items      = $query->paginate(30)->withQueryString();
+        $categories = InspectionChecklistItem::distinct()->orderBy('category')->pluck('category');
+
+        return view('admin.checklist.index', compact('items', 'categories'));
     }
 
     public function create()
     {
-        $packages = InspectionPackage::active()->get();
-        return view('admin.checklist.create', compact('packages'));
+        $categories = InspectionChecklistItem::distinct()->orderBy('category')->pluck('category');
+        return view('admin.checklist.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'package_id' => 'required|exists:inspection_package,id',
             'item_name'  => 'required|string|max:255',
             'category'   => 'required|string|max:100',
             'description'=> 'nullable|string',
             'sort_order' => 'nullable|integer',
+            'is_active'  => 'nullable|boolean',
         ]);
 
-        InspectionChecklistItem::create($request->only('package_id','item_name','category','description','sort_order'));
-        return redirect()->route('admin.checklist-items.index')->with('success', 'Item checklist berhasil ditambahkan.');
+        InspectionChecklistItem::create([
+            'package_id'  => null,
+            'item_name'   => $request->item_name,
+            'category'    => $request->category,
+            'description' => $request->description,
+            'sort_order'  => $request->sort_order ?? 0,
+            'is_active'   => $request->boolean('is_active', true),
+        ]);
+
+        return redirect()->route('admin.checklist-items.index')
+            ->with('success', 'Item checklist berhasil ditambahkan.');
     }
 
     public function edit(InspectionChecklistItem $checklistItem)
     {
-        $packages = InspectionPackage::active()->get();
-        return view('admin.checklist.edit', compact('checklistItem', 'packages'));
+        $categories = InspectionChecklistItem::distinct()->orderBy('category')->pluck('category');
+        return view('admin.checklist.edit', compact('checklistItem', 'categories'));
     }
 
     public function update(Request $request, InspectionChecklistItem $checklistItem)
     {
         $request->validate([
-            'package_id' => 'required|exists:inspection_package,id',
             'item_name'  => 'required|string|max:255',
             'category'   => 'required|string|max:100',
+            'description'=> 'nullable|string',
+            'sort_order' => 'nullable|integer',
+            'is_active'  => 'nullable|boolean',
         ]);
 
-        $checklistItem->update($request->only('package_id','item_name','category','description','sort_order'));
-        return redirect()->route('admin.checklist-items.index')->with('success', 'Item berhasil diperbarui.');
+        $checklistItem->update([
+            'item_name'   => $request->item_name,
+            'category'    => $request->category,
+            'description' => $request->description,
+            'sort_order'  => $request->sort_order ?? $checklistItem->sort_order,
+            'is_active'   => $request->boolean('is_active', $checklistItem->is_active),
+        ]);
+
+        return redirect()->route('admin.checklist-items.index')
+            ->with('success', 'Item berhasil diperbarui.');
     }
 
     public function destroy(InspectionChecklistItem $checklistItem)

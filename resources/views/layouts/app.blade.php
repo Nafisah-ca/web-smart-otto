@@ -8,7 +8,6 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
-    @stack('styles')
 </head>
 <body class="bg-gray-50">
 
@@ -315,7 +314,6 @@
     </div>
 </footer>
 
-@stack('scripts')
 @stack('scripts')
 </body>
 </html>
