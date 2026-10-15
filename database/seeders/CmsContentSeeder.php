@@ -24,6 +24,9 @@ class CmsContentSeeder extends Seeder
             ["key"=>"stat_inspectors",  "label"=>"Teknisi Aktif",    "group"=>"stats","type"=>"text","value"=>"15+"],
             ["key"=>"stat_years",       "label"=>"Tahun Pengalaman", "group"=>"stats","type"=>"text","value"=>"5+"],
 
+            // JADWAL BOOKING
+            ["key"=>"booking_slots","label"=>"Slot Jam Booking","group"=>"jadwal","type"=>"text","value"=>"08:00,09:00,10:00,11:00,13:00,14:00,15:00,16:00"],
+
             // KATEGORI
             ["key"=>"kategori_title","label"=>"Judul Kategori","group"=>"kategori","type"=>"text","value"=>"Pilih Kategori"],
             ["key"=>"kategori_items","label"=>"Daftar Kategori","group"=>"kategori","type"=>"json","value"=>'[{"name":"Kat. 1","harga":"Rp 500.000 - 800.000,-","img":"","models":["Alphard","Land Cruiser","Palisade","Mazda CX-8","Sedan Mercy","Sedan BMW","Mini Cooper","Hilux","Triton","Range Rover","All Lexus","Haice","Mazda CX-60","Chevrolet Captiva","SUV Mercy","SUV BMW","Rubicon","Navara","Ford Ranger","City Car Eropa \/ USA"]},{"name":"Kat. 2","harga":"Rp 350.000 - 500.000,-","img":"","models":["Fortuner","Pajero","Everest","Rush","Terios","Innova","Kijang","Avanza","Xenia","CX-5","HR-V","CR-V","X-Trail","Outlander","Ertiga","XL7","Livina","Freed","Jazz","Yaris"]},{"name":"Kat. 3","harga":"Rp 250.000 - 350.000,-","img":"","models":["Brio","Agya","Ayla","Calya","Sigra","March","Mirage","Picanto","Ignis","S-Cross","Swift","Baleno","Karimun","Wagon R","Splash","Alto","Celerio","Sirion","Veloz","Xpander"]}]'],

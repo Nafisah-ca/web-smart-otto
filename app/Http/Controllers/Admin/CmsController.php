@@ -20,6 +20,7 @@ class CmsController extends Controller
         'kontak'            => ['label' => 'Kontak & Informasi',    'desc' => 'Telepon, email, alamat, dan jam operasional.'],
         'footer'            => ['label' => 'Footer',                'desc' => 'Tagline footer, hak cipta, dan media sosial.'],
         'general'           => ['label' => 'Pengaturan Umum',       'desc' => 'Tentang kami, visi misi, dan FAQ.'],
+        'jadwal'            => ['label' => 'Jadwal & Slot Booking',  'desc' => 'Kelola jam inspeksi yang tersedia untuk booking.'],
         'blog'              => ['label' => 'Artikel Blog',          'desc' => 'Kelola artikel blog yang tampil di halaman publik /blog.', 'external_url' => 'admin.posts.index'],
     ];
 
@@ -59,6 +60,7 @@ class CmsController extends Controller
             'kontak'            => $this->saveSimple($request, ['site_phone','site_email','site_address','site_maps_embed','ops_weekday','ops_saturday','ops_sunday']),
             'footer'            => $this->saveSimple($request, ['footer_tagline','footer_copyright','footer_social_ig','footer_social_fb','footer_social_wa']),
             'general'           => $this->saveGeneral($request),
+            'jadwal'            => $this->saveSimple($request, ['booking_slots']),
             default             => abort(404),
         };
 
@@ -102,6 +104,7 @@ class CmsController extends Controller
             'kontak'            => ['site_phone','site_email','site_address','site_maps_embed','ops_weekday','ops_saturday','ops_sunday'],
             'footer'            => ['footer_tagline','footer_copyright','footer_social_ig','footer_social_fb','footer_social_wa'],
             'general'           => ['site_name','site_tagline','about_title','about_content','about_welcome','about_vision','about_mission','about_logo','faq_items'],
+            'jadwal'            => ['booking_slots'],
             default             => [],
         };
 

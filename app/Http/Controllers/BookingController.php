@@ -31,7 +31,7 @@ class BookingController extends Controller
             'model'        => 'required_if:vehicle_type,new|nullable|string|max:100',
             'plate_number' => 'required_if:vehicle_type,new|nullable|string|max:20',
             'year'         => 'required_if:vehicle_type,new|nullable|integer|min:1990|max:' . date('Y'),
-            'type'         => 'required_if:vehicle_type,new|nullable|in:motor,mobil,truk,bus',
+            'type'         => 'required_if:vehicle_type,new|nullable|in:mobil,truk',
             'color'        => 'nullable|string|max:50',
             'category_id'  => 'nullable|exists:vehicle_category,id',
             'booking_date' => 'required|date|after_or_equal:today',
@@ -166,6 +166,14 @@ class BookingController extends Controller
         $date = $request->query('date');
         if (! $date) return response()->json([]);
 
+        // Ambil slot dari CMS, fallback ke default
+        $cmsSlots = \App\Models\CmsContent::get('booking_slots', '');
+        if ($cmsSlots) {
+            $allSlots = array_values(array_filter(array_map('trim', explode(',', $cmsSlots))));
+        } else {
+            $allSlots = $this->allSlots;
+        }
+
         $booked = Booking::where('booking_date', $date)
             ->whereNotIn('status', ['cancelled'])
             ->selectRaw('booking_time, COUNT(*) as total')
@@ -173,8 +181,16 @@ class BookingController extends Controller
             ->pluck('total', 'booking_time');
 
         $maxPerSlot = 3;
+        $isToday    = $date === now()->toDateString();
+        $nowHour    = now()->format('H:i'); // misal "14:30"
+
         $slots = [];
-        foreach ($this->allSlots as $slot) {
+        foreach ($allSlots as $slot) {
+            // Filter: kalau hari ini dan jam sudah lewat, skip
+            if ($isToday && $slot <= $nowHour) {
+                continue;
+            }
+
             $timeKey  = $slot . ':00';
             $slots[]  = [
                 'time'      => $slot,

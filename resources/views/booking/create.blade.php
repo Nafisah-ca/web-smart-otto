@@ -79,9 +79,7 @@
                         <label class="form-label">Jenis Kendaraan</label>
                         <select name="type" class="form-input">
                             <option value="mobil" {{ old('type')=='mobil'?'selected':'' }}>Mobil</option>
-                            <option value="motor" {{ old('type')=='motor'?'selected':'' }}>Motor</option>
                             <option value="truk"  {{ old('type')=='truk'?'selected':'' }}>Truk</option>
-                            <option value="bus"   {{ old('type')=='bus'?'selected':'' }}>Bus</option>
                         </select>
                     </div>
                     <div>
@@ -273,6 +271,14 @@
                 .then(function (r) { return r.json(); })
                 .then(function (slots) {
                     slotContainer.innerHTML = '';
+                    if (slots.length === 0) {
+                        var today = new Date().toISOString().split('T')[0];
+                        var msg = dateInput.value === today
+                            ? 'Semua jadwal inspeksi untuk hari ini sudah lewat. Silakan pilih tanggal lain.'
+                            : 'Tidak ada slot tersedia untuk tanggal ini. Silakan pilih tanggal lain.';
+                        slotContainer.innerHTML = '<p class="text-sm text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">' + msg + '</p>';
+                        return;
+                    }
                     slots.forEach(function (slot) {
                         var btn = document.createElement('button');
                         btn.type = 'button';
@@ -297,6 +303,13 @@
                 });
         });
         if (dateInput.value) dateInput.dispatchEvent(new Event('change'));
+
+        // Jika hari ini dipilih by default, langsung load slots
+        if (!dateInput.value) {
+            var today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+            dateInput.dispatchEvent(new Event('change'));
+        }
     }
 })();
 </script>
