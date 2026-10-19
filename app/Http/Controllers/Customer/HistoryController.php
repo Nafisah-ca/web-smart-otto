@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class HistoryController extends Controller
 {
@@ -59,5 +60,25 @@ class HistoryController extends Controller
 
         return redirect()->route('customer.history.report', $booking)
             ->with('success', 'Tanda tangan berhasil disimpan!');
+    }
+
+    public function downloadPdf(Booking $booking)
+    {
+        abort_if($booking->user_id !== Auth::id(), 403);
+
+        $result = $booking->inspectionResult;
+        abort_if(!$result || !$result->is_verified, 403, 'Laporan belum tersedia atau belum diverifikasi.');
+
+        $booking->load(['vehicle', 'package', 'inspector', 'transaction.items']);
+
+        $pdf = Pdf::loadView('customer.history.report_pdf', compact('booking', 'result'))
+            ->setPaper('a4', 'portrait')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isRemoteEnabled', false)
+            ->setOption('defaultFont', 'DejaVu Sans');
+
+        $filename = 'Laporan-Inspeksi-' . $booking->booking_code . '.pdf';
+
+        return $pdf->download($filename);
     }
 }

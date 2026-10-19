@@ -4,7 +4,10 @@
 <div class="space-y-5">
     <div class="flex items-center justify-between">
         <a href="{{ route('customer.history.show', $booking) }}" class="text-gray-400 hover:text-gray-600 text-sm">← Kembali</a>
-        <button onclick="window.print()" class="btn-secondary btn-sm">🖨️ Cetak</button>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('customer.history.report.pdf', $booking) }}" class="btn-primary btn-sm" target="_blank">📄 Unduh PDF</a>
+            <button onclick="window.print()" class="btn-secondary btn-sm">🖨️ Cetak</button>
+        </div>
     </div>
 
     {{-- Header Laporan --}}

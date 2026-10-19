@@ -82,6 +82,7 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer
     Route::get('/riwayat',                [HistoryController::class, 'index'])->name('history');
     Route::get('/riwayat/{booking}',      [HistoryController::class, 'show'])->name('history.show');
     Route::get('/laporan/{booking}',      [HistoryController::class, 'report'])->name('history.report');
+    Route::get('/laporan/{booking}/pdf',  [HistoryController::class, 'downloadPdf'])->name('history.report.pdf');
     Route::post('/laporan/{booking}/sign',[HistoryController::class, 'sign'])->name('history.sign');
     Route::get('/profil',                 [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profil',                 [ProfileController::class, 'update'])->name('profile.update');
