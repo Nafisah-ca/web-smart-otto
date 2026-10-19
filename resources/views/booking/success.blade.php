@@ -8,7 +8,11 @@
         </svg>
     </div>
     <h1 class="text-2xl font-bold text-gray-900 mb-2">Booking Berhasil Dibuat!</h1>
+    @if(!$booking->transaction || $booking->transaction->payment_status === 'price_pending')
+    <p class="text-gray-500 mb-6">Booking Anda telah kami catat. Mohon menunggu konfirmasi admin untuk penetapan harga fiks sebelum melakukan pembayaran.</p>
+    @else
     <p class="text-gray-500 mb-6">Booking Anda telah kami catat. Silakan selesaikan pembayaran untuk memprioritaskan jadwal inspeksi.</p>
+    @endif
 
     <div class="card p-6 text-left space-y-3 mb-6 shadow-sm">
         <div class="flex justify-between text-sm">
@@ -34,7 +38,11 @@
         @if($booking->transaction)
         <div class="flex justify-between text-sm pt-2 border-t border-gray-100 items-center">
             <span class="text-gray-700 font-semibold">Total Tagihan</span>
+            @if($booking->transaction->payment_status === 'price_pending')
+            <span class="font-semibold text-amber-600 text-sm">Menunggu Konfirmasi Admin / Harga Fiks</span>
+            @else
             <span class="font-extrabold text-primary-600 text-base">{{ $booking->transaction->formatted_total }}</span>
+            @endif
         </div>
         @endif
         <div class="flex justify-between text-sm pt-2 border-t border-gray-100">
@@ -43,7 +51,28 @@
         </div>
     </div>
 
-    {{-- Banner Pembayaran QRIS / All Payment --}}
+    @if(!$booking->transaction || $booking->transaction->payment_status === 'price_pending')
+    {{-- Banner Menunggu Konfirmasi Admin / Menunggu Harga Fiks --}}
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-left mb-6 flex items-center gap-3.5 shadow-sm">
+        <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 text-xl font-bold">
+            ⏳
+        </div>
+        <div>
+            <p class="font-bold text-amber-900 text-sm">Menunggu Konfirmasi Admin / Menunggu Harga Fiks</p>
+            <p class="text-xs text-amber-700 mt-0.5">Admin kami sedang meninjau detail booking Anda. Pembayaran akan dapat dilakukan setelah harga fiks ditentukan oleh admin.</p>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 justify-center">
+        <a href="{{ route('customer.dashboard') }}" class="btn-primary">
+            Lihat Dashboard
+        </a>
+        <a href="{{ route('customer.history.show', $booking) }}" class="btn-secondary">
+            Detail Booking
+        </a>
+    </div>
+    @else
+    {{-- Banner Pembayaran QRIS / All Payment (Jika sudah ada harga fiks) --}}
     <div class="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl p-4 text-left mb-6 flex items-center justify-between gap-4">
         <div>
             <p class="font-bold text-gray-900 text-sm">⚡ Bayar Cepat via QRIS / Bank Transfer</p>
@@ -62,5 +91,6 @@
             Lihat Dashboard
         </a>
     </div>
+    @endif
 </div>
 @endsection

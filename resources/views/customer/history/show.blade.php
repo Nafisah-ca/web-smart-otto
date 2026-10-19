@@ -148,7 +148,11 @@
             @endif
             <div class="flex justify-between font-bold text-gray-900 text-base border-t border-gray-200 pt-2">
                 <span>Total</span>
+                @if($trx->payment_status === 'price_pending')
+                <span class="text-amber-600 text-xs font-semibold">Menunggu Konfirmasi Admin / Harga Fiks</span>
+                @else
                 <span class="text-primary-600">{{ $trx->formatted_total }}</span>
+                @endif
             </div>
             @if($trx->payment_method)
             <div class="flex justify-between text-xs text-gray-500 pt-1">
@@ -165,6 +169,8 @@
             <a href="{{ route('customer.transactions.show', $booking) }}" class="btn-primary btn-sm text-xs flex items-center gap-1">
                 @if($trx->payment_status === 'paid')
                 Lihat Rincian Pembayaran & QRIS
+                @elseif($trx->payment_status === 'price_pending')
+                ⏳ Menunggu Konfirmasi Admin / Harga Fiks
                 @else
                 💳 Bayar Sekarang / Tampilkan QRIS →
                 @endif

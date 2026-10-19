@@ -45,6 +45,12 @@
                 PROSES VERIFIKASI
             </div>
         </div>
+        @elseif($transaction->payment_status === 'price_pending')
+        <div class="absolute top-12 right-8 pointer-events-none opacity-85 rotate-[-12deg]">
+            <div class="border-4 border-amber-500 text-amber-600 font-black text-base sm:text-lg px-3 py-1.5 rounded-xl uppercase tracking-wider bg-amber-50/70 text-center">
+                MENUNGGU KONFIRMASI HARGA
+            </div>
+        </div>
         @else
         <div class="absolute top-12 right-8 pointer-events-none opacity-85 rotate-[-12deg]">
             <div class="border-4 border-red-600 text-red-600 font-black text-xl sm:text-2xl px-4 py-1.5 rounded-xl uppercase tracking-wider bg-red-50/70">

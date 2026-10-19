@@ -169,6 +169,22 @@
 
         {{-- Kolom Kanan: Pilihan Metode Pembayaran & Form Upload Bukti --}}
         <div class="lg:col-span-7 space-y-6">
+            @if($transaction->payment_status === 'price_pending')
+            <div class="card p-8 text-center space-y-3 bg-white shadow-sm border border-amber-200">
+                <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
+                    ⏳
+                </div>
+                <h3 class="font-bold text-gray-900 text-lg">Menunggu Konfirmasi Admin / Menunggu Harga Fiks</h3>
+                <p class="text-sm text-gray-600 max-w-md mx-auto">
+                    Admin kami sedang memeriksa data kendaraan Anda untuk menentukan harga fiks. Pilihan pembayaran (QRIS, Transfer Bank, E-Wallet) akan otomatis aktif setelah harga dikonfirmasi oleh admin.
+                </p>
+                <div class="pt-2">
+                    <a href="{{ route('customer.dashboard') }}" class="btn-secondary btn-sm">
+                        ← Kembali ke Dashboard
+                    </a>
+                </div>
+            </div>
+            @else
             {{-- Payment Channel Selector --}}
             <div class="card overflow-hidden">
                 <div class="p-5 border-b border-gray-100 bg-white">
@@ -307,6 +323,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             {{-- Form Upload Bukti Pembayaran / Konfirmasi --}}
             @if(!in_array($transaction->payment_status, ['paid', 'price_pending']))
