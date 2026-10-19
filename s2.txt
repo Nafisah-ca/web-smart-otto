@@ -1,4 +1,0 @@
-
-   INFO  Seeding database.  
-
-KeunggulanDetailSeeder: 17 CMS rows seeded.
