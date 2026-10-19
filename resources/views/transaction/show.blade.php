@@ -210,58 +210,82 @@
         </div>
     </div>
 
-    {{-- Tambah Item Transaksi --}}
-    <div class="card p-5 shadow-sm">
-        <h3 class="font-bold text-gray-900 text-sm mb-3">+ Tambah Item / Jasa Tambahan</h3>
-        <form method="POST" action="{{ route('transaction.item.add', $booking) }}" class="space-y-3" id="addItemForm">
-            @csrf
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                <div class="sm:col-span-2 md:col-span-4">
-                    <label class="form-label text-xs">Pilih dari Master Tarif (Opsional)</label>
-                    <select id="tariffSelect" class="form-input text-xs" onchange="fillFromTariff(this)">
-                        <option value="">-- Pilih tarif otomatis --</option>
-                        @foreach($tariffs->groupBy('category') as $cat => $items)
-                        <optgroup label="{{ $cat }}">
-                            @foreach($items as $t)
-                            <option value="{{ $t->id }}" data-name="{{ $t->name }}" data-cat="{{ $t->category }}"
-                                    data-price="{{ $t->price }}" data-unit="{{ $t->unit }}">
-                                {{ $t->name }} — Rp {{ number_format($t->price,0,',','.') }}/{{ $t->unit }}
-                            </option>
-                            @endforeach
-                        </optgroup>
-                        @endforeach
-                    </select>
-                    <input type="hidden" name="tariff_id" id="tariffId">
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="form-label text-xs">Nama Item / Jasa <span class="text-red-500">*</span></label>
-                    <input type="text" name="item_name" id="itemName" class="form-input text-xs" required placeholder="Contoh: Penggantian Oli Mesin">
-                </div>
-                <div>
-                    <label class="form-label text-xs">Kategori <span class="text-red-500">*</span></label>
-                    <input type="text" name="category" id="itemCat" class="form-input text-xs" required placeholder="Contoh: Servis / Sparepart">
-                </div>
-                <div>
-                    <label class="form-label text-xs">Harga Satuan (Rp) <span class="text-red-500">*</span></label>
-                    <input type="number" name="price" id="itemPrice" class="form-input text-xs" min="0" required placeholder="0">
-                </div>
-                <div>
-                    <label class="form-label text-xs">Jumlah <span class="text-red-500">*</span></label>
-                    <input type="number" name="quantity" value="1" class="form-input text-xs" min="1" required>
-                </div>
-                <div>
-                    <label class="form-label text-xs">Satuan <span class="text-red-500">*</span></label>
-                    <input type="text" name="unit" id="itemUnit" value="pcs" class="form-input text-xs" required>
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="form-label text-xs">Catatan (Opsional)</label>
-                    <input type="text" name="notes" placeholder="Catatan item..." class="form-input text-xs">
-                </div>
+    {{-- Info Alur Item Tambahan & Penyesuaian --}}
+    <div class="card p-5 shadow-sm space-y-3">
+        <div class="flex items-start justify-between">
+            <div>
+                <h3 class="font-bold text-gray-900 text-sm flex items-center gap-2">
+                    <span>📦</span> Item / Jasa Tambahan dari Master Tarif
+                </h3>
+                <p class="text-xs text-gray-500 mt-0.5">
+                    Item tambahan (seperti ganti ban, oli, atau suku cadang lainnya) diinput dan dilaporkan langsung oleh <strong>Inspektor</strong> selama proses inspeksi.
+                </p>
             </div>
-            <div class="pt-2">
-                <button type="submit" class="btn-primary btn-sm text-xs font-bold">+ Tambah ke Tagihan</button>
+            @if(auth()->user()->isAdmin() && $transaction->payment_status === 'price_pending')
+            <a href="{{ route('admin.bookings.show', $booking) }}" class="btn-primary btn-sm text-xs font-bold flex items-center gap-1">
+                💰 Konfirmasi Harga di Booking →
+            </a>
+            @endif
+        </div>
+
+        @if(auth()->user()->isAdmin())
+        <details class="text-xs text-gray-600 bg-gray-50 border border-gray-200 rounded-xl p-3">
+            <summary class="font-bold text-gray-700 cursor-pointer hover:text-primary-600 select-none">
+                + Tambah Item Manual oleh Admin (Opsional / Override)
+            </summary>
+            <div class="mt-3 pt-3 border-t border-gray-200">
+                <form method="POST" action="{{ route('transaction.item.add', $booking) }}" class="space-y-3" id="addItemForm">
+                    @csrf
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="sm:col-span-2 md:col-span-4">
+                            <label class="form-label text-xs">Pilih dari Master Tarif (Opsional)</label>
+                            <select id="tariffSelect" class="form-input text-xs" onchange="fillFromTariff(this)">
+                                <option value="">-- Pilih tarif otomatis --</option>
+                                @foreach($tariffs->groupBy('category') as $cat => $items)
+                                <optgroup label="{{ $cat }}">
+                                    @foreach($items as $t)
+                                    <option value="{{ $t->id }}" data-name="{{ $t->name }}" data-cat="{{ $t->category }}"
+                                            data-price="{{ $t->price }}" data-unit="{{ $t->unit }}">
+                                        {{ $t->name }} — Rp {{ number_format($t->price,0,',','.') }}/{{ $t->unit }}
+                                    </option>
+                                    @endforeach
+                                </optgroup>
+                                @endforeach
+                            </select>
+                            <input type="hidden" name="tariff_id" id="tariffId">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="form-label text-xs">Nama Item / Jasa <span class="text-red-500">*</span></label>
+                            <input type="text" name="item_name" id="itemName" class="form-input text-xs" required placeholder="Contoh: Penggantian Oli Mesin">
+                        </div>
+                        <div>
+                            <label class="form-label text-xs">Kategori <span class="text-red-500">*</span></label>
+                            <input type="text" name="category" id="itemCat" class="form-input text-xs" required placeholder="Contoh: Servis / Sparepart">
+                        </div>
+                        <div>
+                            <label class="form-label text-xs">Harga Satuan (Rp) <span class="text-red-500">*</span></label>
+                            <input type="number" name="price" id="itemPrice" class="form-input text-xs" min="0" required placeholder="0">
+                        </div>
+                        <div>
+                            <label class="form-label text-xs">Jumlah <span class="text-red-500">*</span></label>
+                            <input type="number" name="quantity" value="1" class="form-input text-xs" min="1" required>
+                        </div>
+                        <div>
+                            <label class="form-label text-xs">Satuan <span class="text-red-500">*</span></label>
+                            <input type="text" name="unit" id="itemUnit" value="pcs" class="form-input text-xs" required>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="form-label text-xs">Catatan (Opsional)</label>
+                            <input type="text" name="notes" placeholder="Catatan item..." class="form-input text-xs">
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <button type="submit" class="btn-secondary btn-sm text-xs font-bold">+ Simpan Item Manual</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </details>
+        @endif
     </div>
 
     {{-- Status & Rekam Pembayaran Admin --}}

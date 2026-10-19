@@ -6,7 +6,7 @@
     <div class="card p-6 mt-4">
         <form method="POST" action="{{ route('admin.tariffs.store') }}" class="space-y-4">
             @csrf
-            @include('admin.tariffs._form')
+            @include('admin.tariffs._form', ['tariff' => $tariff ?? null])
             <button class="btn-primary">Simpan Tarif</button>
         </form>
     </div>

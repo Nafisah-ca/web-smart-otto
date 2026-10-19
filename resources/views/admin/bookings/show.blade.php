@@ -64,40 +64,125 @@
         </div>
     </div>
 
-    {{-- Konfirmasi Harga --}}
+    {{-- Konfirmasi Harga oleh Admin (Alur: hanya di akhir setelah inspeksi selesai) --}}
     @if($booking->transaction?->payment_status === 'price_pending')
-    @php $cat = $booking->vehicleCategory; @endphp
-    <div class="card p-5 border-2 border-primary-200 bg-primary-50">
-        <h3 class="font-semibold text-primary-800 mb-1">💰 Konfirmasi Harga Inspeksi</h3>
-        <p class="text-sm text-primary-700 mb-4">
-            Customer belum bisa bayar sampai harga dikonfirmasi.
-            @if($cat)
-            Kisaran harga untuk <strong>{{ $cat->name }}</strong>:
-            <strong>{{ $cat->formatted_range }}</strong>
-            @endif
-        </p>
-        <form method="POST" action="{{ route('admin.bookings.confirm-price', $booking) }}" class="flex flex-wrap gap-3 items-end">
+    @php
+        $cat = $booking->vehicleCategory;
+        $trx = $booking->transaction;
+        $additionalItems = $trx ? $trx->items->where('category', '!=', 'Inspeksi') : collect();
+        $inspectionDone = $booking->inspectionResult && $booking->inspectionResult->is_verified;
+    @endphp
+
+    @if(!$inspectionDone)
+    {{-- Belum Selesai Inspeksi: Menunggu Laporan Inspektor --}}
+    <div class="card p-5 border-2 border-amber-300 bg-amber-50/80 shadow-sm">
+        <div class="flex items-start gap-3.5">
+            <div class="w-10 h-10 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center font-bold text-lg flex-shrink-0">
+                ⏳
+            </div>
+            <div class="flex-1">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                    <h3 class="font-bold text-amber-900 text-base">Menunggu Inspeksi Selesai untuk Konfirmasi Harga Final</h3>
+                    <span class="badge-yellow text-xs font-bold w-fit">Menunggu Laporan Inspektor</span>
+                </div>
+                <p class="text-xs text-amber-800 mt-1 leading-relaxed">
+                    Sesuai alur, <strong>admin hanya mengonfirmasi harga di akhir</strong> setelah inspektor selesai melakukan inspeksi dan mengirimkan laporan item/jasa tambahan dari Master Tarif (jika ada permintaan customer seperti ganti ban, oli, atau sparepart).
+                </p>
+                <div class="mt-3 pt-2.5 border-t border-amber-200 flex flex-wrap items-center justify-between gap-2 text-xs text-amber-900">
+                    <div>
+                        <span>Inspektor Bertugas: </span>
+                        <strong>{{ $booking->inspector?->name ?? 'Belum di-assign' }}</strong>
+                        @if($booking->status)
+                        <span class="ml-1 badge-{{ $booking->status_color }} text-[10px]">{{ $booking->status_label }}</span>
+                        @endif
+                    </div>
+                    @if($additionalItems->count() > 0)
+                    <span class="text-primary-700 font-bold bg-amber-100 px-2 py-0.5 rounded-md">
+                        📦 {{ $additionalItems->count() }} item tambahan telah dilaporkan inspektor sejauh ini
+                    </span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @else
+    {{-- Inspeksi Selesai: Form Konfirmasi Harga Final di Akhir --}}
+    <div class="card p-5 border-2 border-emerald-300 bg-emerald-50/70 shadow-sm space-y-4">
+        <div class="flex items-start justify-between">
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+                    💰
+                </div>
+                <div>
+                    <h3 class="font-bold text-emerald-900 text-base">Konfirmasi Harga Final di Akhir (Inspeksi Selesai)</h3>
+                    <p class="text-xs text-emerald-800 mt-0.5">
+                        Inspektor telah menyelesaikan inspeksi kendaraan dan memverifikasi laporan. Tinjau rincian item tambahan di bawah ini lalu tentukan harga final untuk membuka pembayaran bagi customer.
+                    </p>
+                </div>
+            </div>
+            <span class="badge-green text-xs font-bold">Siap Dikonfirmasi</span>
+        </div>
+
+        {{-- Rincian Item Tambahan dari Laporan Inspektor --}}
+        @if($additionalItems->count() > 0)
+        <div class="bg-white rounded-xl p-4 border border-emerald-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between pb-1.5 border-b border-gray-100">
+                <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Item / Jasa Tambahan dari Master Tarif (Laporan Inspektor):</h4>
+                <span class="text-xs font-semibold text-primary-600">{{ $additionalItems->count() }} Item Tambahan</span>
+            </div>
+            <div class="divide-y divide-gray-100 text-xs">
+                @foreach($additionalItems as $item)
+                <div class="py-2 flex justify-between items-center">
+                    <div>
+                        <span class="font-bold text-gray-900">{{ $item->item_name }}</span>
+                        <span class="px-2 py-0.5 ml-2 text-[10px] rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-medium">{{ $item->category }}</span>
+                        @if($item->notes)
+                        <span class="text-gray-500 block text-[11px] mt-0.5">Catatan: {{ $item->notes }}</span>
+                        @endif
+                    </div>
+                    <div class="text-right">
+                        <span class="text-gray-500">{{ $item->quantity }} {{ $item->unit }} × Rp {{ number_format($item->price, 0, ',', '.') }}</span>
+                        <strong class="block text-gray-900 font-mono">{{ $item->formatted_subtotal }}</strong>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @else
+        <div class="bg-white/80 rounded-xl p-3 text-xs text-gray-600 border border-emerald-200 flex items-center gap-2">
+            <span>ℹ️</span>
+            <span>Inspektor tidak mencatat item tambahan (customer hanya menggunakan layanan inspeksi standar).</span>
+        </div>
+        @endif
+
+        {{-- Form Submit Konfirmasi Harga --}}
+        <form method="POST" action="{{ route('admin.bookings.confirm-price', $booking) }}" class="flex flex-wrap gap-4 items-end pt-3 border-t border-emerald-200">
             @csrf
             <div>
-                <label class="form-label text-sm">Harga Final (Rp)</label>
+                <label class="form-label text-xs font-bold text-gray-800">Biaya Inspeksi Final (Rp) <span class="text-red-500">*</span></label>
                 <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">Rp</span>
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 font-bold">Rp</span>
                     <input type="number" name="final_price"
                            value="{{ old('final_price', $booking->final_price ?? $cat?->price_min ?? '') }}"
                            min="{{ $cat?->price_min ?? 0 }}"
                            max="{{ $cat?->price_max ?? 99999999 }}"
                            step="1000"
-                           class="form-input pl-9 w-48 @error('final_price') border-red-400 @enderror"
+                           class="form-input pl-9 w-52 text-sm font-bold @error('final_price') border-red-400 @enderror"
                            required>
                 </div>
                 @error('final_price')<p class="form-error text-xs mt-1">{{ $message }}</p>@enderror
                 @if($cat)
-                <p class="text-xs text-gray-500 mt-1">Min: Rp {{ number_format($cat->price_min,0,',','.') }} — Max: Rp {{ number_format($cat->price_max,0,',','.') }}</p>
+                <p class="text-[11px] text-gray-500 mt-1">Kisaran kategori {{ $cat->name }}: {{ $cat->formatted_range }}</p>
                 @endif
             </div>
-            <button class="btn-primary">✅ Konfirmasi Harga</button>
+
+            <button type="submit" class="btn-primary font-bold shadow-md bg-emerald-600 hover:bg-emerald-700 py-2.5 px-5 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Konfirmasi Harga Final & Buka Pembayaran
+            </button>
         </form>
     </div>
+    @endif
     @endif
 
     {{-- Assign Inspektor --}}

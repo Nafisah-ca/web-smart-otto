@@ -171,6 +171,8 @@ Route::middleware(['auth', 'role:inspector'])->prefix('inspector')->name('inspec
     Route::put('/tugas/{booking}/inspeksi',         [InspectionController::class, 'update'])->name('tasks.update');
     Route::post('/tugas/{booking}/verifikasi',      [InspectionController::class, 'verify'])->name('tasks.verify');
     Route::post('/tugas/{booking}/foto',            [InspectionController::class, 'uploadPhoto'])->name('tasks.photo');
+    Route::post('/tugas/{booking}/item',            [InspectionController::class, 'addItem'])->name('tasks.item.add');
+    Route::delete('/tugas/{booking}/item/{item}',   [InspectionController::class, 'removeItem'])->name('tasks.item.remove');
 });
 
 /*

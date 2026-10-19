@@ -90,6 +90,15 @@
             </div>
         </div>
 
+        {{-- Info Item Tambahan dari Master Tarif --}}
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
+            <span class="text-xl">💡</span>
+            <div class="text-xs text-amber-900 leading-relaxed">
+                <strong class="block text-sm font-bold text-amber-950 mb-0.5">Permintaan Penggantian Suku Cadang / Servis Tambahan?</strong>
+                Jika customer meminta pekerjaan tambahan seperti <strong>ganti ban, oli, atau item lain</strong> yang ada di Master Tarif, Anda dapat menambahkannya pada menu <em>Item / Jasa Tambahan (Master Tarif)</em> di halaman Detail Tugas setelah menyimpan hasil inspeksi ini. Semua item akan dilaporkan ke admin untuk penetapan harga final di akhir.
+            </div>
+        </div>
+
         {{-- Upload Foto --}}
         <div class="card p-5">
             <h3 class="font-semibold text-gray-800 mb-3">Foto Dokumentasi</h3>

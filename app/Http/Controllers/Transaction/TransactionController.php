@@ -112,7 +112,7 @@ class TransactionController extends Controller
                 'tax'              => 0,
                 'discount'         => 0,
                 'total'            => 0,
-                'payment_status'   => 'unpaid',
+                'payment_status'   => 'price_pending',
             ]);
         }
 
@@ -153,6 +153,7 @@ class TransactionController extends Controller
     public function removeItem(Booking $booking, TransactionItem $item)
     {
         abort_if($item->transaction->booking_id !== $booking->id, 403);
+        abort_if($item->category === 'Inspeksi', 422, 'Biaya inspeksi utama tidak dapat dihapus.');
         $transaction = $item->transaction;
         $item->delete();
         $transaction->recalculate();

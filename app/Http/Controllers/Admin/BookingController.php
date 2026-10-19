@@ -72,6 +72,11 @@ class BookingController extends Controller
      */
     public function confirmPrice(Request $request, Booking $booking)
     {
+        // Alur: admin hanya konfirmasi harga di akhir saja setelah inspektor selesai inspeksi
+        if (! $booking->inspectionResult || ! $booking->inspectionResult->is_verified) {
+            return back()->with('error', 'Konfirmasi harga final hanya dapat dilakukan setelah inspektor menyelesaikan inspeksi dan memverifikasi laporan.');
+        }
+
         $category = $booking->vehicleCategory;
 
         $request->validate([

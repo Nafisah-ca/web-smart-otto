@@ -25,7 +25,8 @@ class TariffController extends Controller
     public function create()
     {
         $categories = Tariff::distinct()->pluck('category');
-        return view('admin.tariffs.create', compact('categories'));
+        $tariff     = new Tariff();
+        return view('admin.tariffs.create', compact('categories', 'tariff'));
     }
 
     public function store(Request $request)

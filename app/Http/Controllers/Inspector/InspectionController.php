@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\InspectionChecklistItem;
 use App\Models\InspectionResult;
+use App\Models\Tariff;
 use App\Models\Transaction;
+use App\Models\TransactionItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -31,13 +33,14 @@ class InspectionController extends Controller
     {
         $this->authorizeInspector($booking);
         $booking->load(['user','vehicle','package','inspectionResult','transaction.items.tariff']);
-        return view('inspector.tasks.show', compact('booking'));
+        $tariffs = Tariff::active()->orderBy('category')->orderBy('name')->get();
+        return view('inspector.tasks.show', compact('booking', 'tariffs'));
     }
 
     public function form(Booking $booking)
     {
         $this->authorizeInspector($booking);
-        $booking->load(['vehicle', 'inspectionResult']);
+        $booking->load(['vehicle', 'inspectionResult', 'transaction.items.tariff']);
 
         // Tandai sebagai on_progress jika masih confirmed/waiting
         if (in_array($booking->status, ['confirmed', 'waiting'])) {
@@ -50,8 +53,9 @@ class InspectionController extends Controller
             ->get();
 
         $existingResult = $booking->inspectionResult;
+        $tariffs = Tariff::active()->orderBy('category')->orderBy('name')->get();
 
-        return view('inspector.tasks.form', compact('booking', 'checklistItems', 'existingResult'));
+        return view('inspector.tasks.form', compact('booking', 'checklistItems', 'existingResult', 'tariffs'));
     }
 
     public function store(Request $request, Booking $booking)
@@ -123,7 +127,68 @@ class InspectionController extends Controller
         $booking->update(['status' => 'completed']);
 
         return redirect()->route('inspector.tasks.show', $booking)
-            ->with('success', 'Laporan berhasil diverifikasi. Booking selesai!');
+            ->with('success', 'Laporan inspeksi & item tambahan berhasil diverifikasi dan dikirim ke admin untuk penetapan harga final.');
+    }
+
+    public function addItem(Request $request, Booking $booking)
+    {
+        $this->authorizeInspector($booking);
+
+        abort_if($booking->inspectionResult?->is_verified, 422, 'Laporan inspeksi sudah diverifikasi dan dikirim ke admin. Item tidak dapat diubah lagi.');
+
+        $request->validate([
+            'tariff_id' => 'nullable|exists:tariff,id',
+            'item_name' => 'required|string|max:255',
+            'category'  => 'required|string|max:100',
+            'price'     => 'required|numeric|min:0',
+            'quantity'  => 'required|integer|min:1',
+            'unit'      => 'required|string|max:20',
+            'notes'     => 'nullable|string|max:255',
+        ]);
+
+        $transaction = $booking->transaction;
+        if (!$transaction) {
+            $transaction = Transaction::create([
+                'transaction_code' => Transaction::generateCode(),
+                'booking_id'       => $booking->id,
+                'subtotal'         => 0,
+                'tax'              => 0,
+                'discount'         => 0,
+                'total'            => 0,
+                'payment_status'   => 'price_pending',
+            ]);
+        }
+
+        TransactionItem::create([
+            'transaction_id' => $transaction->id,
+            'tariff_id'      => $request->tariff_id ?: null,
+            'item_name'      => $request->item_name,
+            'category'       => $request->category,
+            'price'          => $request->price,
+            'quantity'       => $request->quantity,
+            'unit'           => $request->unit,
+            'subtotal'       => $request->price * $request->quantity,
+            'notes'          => $request->notes,
+        ]);
+
+        $transaction->recalculate();
+
+        return back()->with('success', "Item '{$request->item_name}' berhasil ditambahkan ke laporan.");
+    }
+
+    public function removeItem(Booking $booking, TransactionItem $item)
+    {
+        $this->authorizeInspector($booking);
+        abort_if($item->transaction->booking_id !== $booking->id, 403);
+        abort_if($item->category === 'Inspeksi', 422, 'Biaya inspeksi utama tidak dapat dihapus.');
+        abort_if($booking->inspectionResult?->is_verified, 422, 'Laporan inspeksi sudah diverifikasi. Item tidak dapat dihapus lagi.');
+
+        $transaction = $item->transaction;
+        $name = $item->item_name;
+        $item->delete();
+        $transaction->recalculate();
+
+        return back()->with('success', "Item '{$name}' berhasil dihapus dari laporan.");
     }
 
     public function uploadPhoto(Request $request, Booking $booking)
