@@ -19,14 +19,17 @@ class InspectionController extends Controller
     {
         $query = Booking::where('inspector_id', Auth::id())
             ->with(['user','vehicle','package'])
-            ->orderByDesc('booking_date');
+            ->orderBy('booking_date')
+            ->orderBy('created_at');      // yang udah booking dari tadi di atas, baru booking di bawah
 
         if ($request->status) {
             $query->where('status', $request->status);
         }
 
         $bookings = $query->paginate(15)->withQueryString();
-        return view('inspector.tasks.index', compact('bookings'));
+        $groupedBookings = $bookings->getCollection()->groupBy(fn($b) => $b->booking_date->format('Y-m-d'));  // pisah per tanggal
+
+        return view('inspector.tasks.index', compact('bookings', 'groupedBookings'));
     }
 
     public function show(Booking $booking)

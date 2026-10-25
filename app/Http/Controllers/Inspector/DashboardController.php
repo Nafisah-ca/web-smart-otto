@@ -22,8 +22,9 @@ class DashboardController extends Controller
             ->whereIn('status', ['confirmed','waiting','on_progress'])
             ->with(['user','vehicle','package'])
             ->orderBy('booking_date')
-            ->orderBy('booking_time')
-            ->get();
+            ->orderBy('created_at')      // yang udah booking dari tadi di atas, baru booking di bawah
+            ->get()
+            ->groupBy(fn($b) => $b->booking_date->format('Y-m-d'));  // pisah per tanggal
 
         $stats = [
             'total'       => Booking::where('inspector_id', $user->id)->count(),

@@ -49,21 +49,28 @@
     @if($pendingTasks->count())
     <div>
         <h3 class="font-semibold text-gray-800 mb-3">Tugas Pending</h3>
-        <div class="card overflow-hidden">
-            <table class="w-full table-auto">
-                <thead><tr><th>Tanggal</th><th>Customer</th><th>Kendaraan</th><th>Status</th><th>Aksi</th></tr></thead>
-                <tbody>
-                    @foreach($pendingTasks as $b)
-                    <tr>
-                        <td class="text-sm">{{ $b->booking_date->format('d M') }} {{ substr($b->booking_time,0,5) }}</td>
-                        <td class="text-sm font-medium">{{ $b->user->name }}</td>
-                        <td class="text-sm">{{ $b->vehicle->brand }} {{ $b->vehicle->model }}</td>
-                        <td><span class="badge-{{ $b->status_color }}">{{ $b->status_label }}</span></td>
-                        <td><a href="{{ route('inspector.tasks.show', $b) }}" class="btn-secondary btn-sm text-xs">Detail</a></td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="space-y-5">
+            @foreach($pendingTasks as $date => $bookings)
+            <div>
+                <h4 class="font-medium text-sm text-gray-700 mb-2">{{ $bookings->first()->booking_date->format('d M Y') }}</h4>
+                <div class="card overflow-hidden">
+                    <table class="w-full table-auto">
+                        <thead><tr><th>Tanggal</th><th>Customer</th><th>Kendaraan</th><th>Status</th><th>Aksi</th></tr></thead>
+                        <tbody>
+                            @foreach($bookings as $b)
+                            <tr>
+                                <td class="text-sm">{{ $b->booking_date->format('d M') }} {{ substr($b->booking_time,0,5) }}</td>
+                                <td class="text-sm font-medium">{{ $b->user->name }}</td>
+                                <td class="text-sm">{{ $b->vehicle->brand }} {{ $b->vehicle->model }}</td>
+                                <td><span class="badge-{{ $b->status_color }}">{{ $b->status_label }}</span></td>
+                                <td><a href="{{ route('inspector.tasks.show', $b) }}" class="btn-secondary btn-sm text-xs">Detail</a></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endforeach
         </div>
     </div>
     @endif

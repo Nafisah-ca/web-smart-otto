@@ -15,29 +15,40 @@
         </select>
     </form>
 
-    @forelse($bookings as $b)
-    <div class="card p-4">
-        <div class="flex items-start justify-between gap-3">
-            <div>
-                <div class="flex items-center gap-2 mb-1">
-                    <span class="font-mono text-xs font-bold text-primary-600">{{ $b->booking_code }}</span>
-                    <span class="badge-{{ $b->status_color }}">{{ $b->status_label }}</span>
+    @if($groupedBookings->count())
+    <div class="space-y-5">
+        @foreach($groupedBookings as $date => $groupBookings)
+        <div>
+            <h4 class="font-medium text-sm text-gray-700 mb-2">{{ $groupBookings->first()->booking_date->format('d M Y') }}</h4>
+            <div class="space-y-3">
+                @foreach($groupBookings as $b)
+                <div class="card p-4">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-mono text-xs font-bold text-primary-600">{{ $b->booking_code }}</span>
+                                <span class="badge-{{ $b->status_color }}">{{ $b->status_label }}</span>
+                            </div>
+                            <p class="font-medium text-gray-800">{{ $b->user->name }}</p>
+                            <p class="text-sm text-gray-500">{{ $b->vehicle->brand }} {{ $b->vehicle->model }} · {{ $b->package?->name ?? $b->vehicleCategory?->name ?? 'Inspeksi' }}</p>
+                            <p class="text-xs text-gray-400">{{ $b->booking_date->isoFormat('D MMM Y') }} · {{ substr($b->booking_time,0,5) }}</p>
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <a href="{{ route('inspector.tasks.show', $b) }}" class="btn-secondary btn-sm text-xs">Detail</a>
+                            @if(in_array($b->status, ['confirmed','waiting','on_progress']))
+                            <a href="{{ route('inspector.tasks.form', $b) }}" class="btn-primary btn-sm text-xs">🔧 Isi Hasil</a>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-                <p class="font-medium text-gray-800">{{ $b->user->name }}</p>
-                <p class="text-sm text-gray-500">{{ $b->vehicle->brand }} {{ $b->vehicle->model }} · {{ $b->package?->name ?? $b->vehicleCategory?->name ?? 'Inspeksi' }}</p>
-                <p class="text-xs text-gray-400">{{ $b->booking_date->isoFormat('D MMM Y') }} · {{ substr($b->booking_time,0,5) }}</p>
-            </div>
-            <div class="flex flex-col gap-1.5">
-                <a href="{{ route('inspector.tasks.show', $b) }}" class="btn-secondary btn-sm text-xs">Detail</a>
-                @if(in_array($b->status, ['confirmed','waiting','on_progress']))
-                <a href="{{ route('inspector.tasks.form', $b) }}" class="btn-primary btn-sm text-xs">🔧 Isi Hasil</a>
-                @endif
+                @endforeach
             </div>
         </div>
+        @endforeach
     </div>
-    @empty
+    @else
     <div class="card p-10 text-center text-gray-400">Belum ada tugas yang di-assign.</div>
-    @endforelse
+    @endif
 
     {{ $bookings->links() }}
 </div>
